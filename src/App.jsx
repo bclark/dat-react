@@ -11,6 +11,8 @@ const App = () => {
   const [activityId, setActivityId] = useState(null); // ID for the activity being edited
   const [createdAt, setCreatedAt] = useState("");
   const [notes, setNotes] = useState("");
+  const [isPoopChecked, setIsPoopChecked] = useState(false);
+  const [isPeeChecked, setIsPeeChecked] = useState(false);
 
   const activityTypes = ["Walk", "Backyard", "Breakfast", "Dinner"];
 
@@ -39,11 +41,21 @@ const App = () => {
       setActivityId(activity.id);
       setCreatedAt(activity.created_at);
       setNotes(activity.notes || "");
+
+      // Check for 'poop' and 'pee' in the notes
+      setIsPoopChecked(activity.notes?.toLowerCase().includes("poop"));
+      setIsPeeChecked(activity.notes?.toLowerCase().includes("pee"));
+      /*
+      delete the case insensitive "poop" and "pee" from the notes
+      */
+      setNotes((prev) => prev.replace(/poop\s*/i, "").replace(/pee\s*/i, ""));
     } else {
       // New activity mode
       setEditMode(false);
       setCreatedAt(new Date().toISOString());
       setNotes("");
+      setIsPoopChecked(false);
+      setIsPeeChecked(false);
     }
     setOpen(true);
   };
@@ -59,13 +71,10 @@ const App = () => {
 
     // Prepend Poop or Pee if applicable
     if (selectedActivity === "Walk" || selectedActivity === "Backyard") {
-      const poopCheckbox = document.getElementById("poop-checkbox");
-      const peeCheckbox = document.getElementById("pee-checkbox");
-
-      if (poopCheckbox.checked) {
+      if (isPoopChecked) {
         updatedNotes = `Poop ${updatedNotes}`;
       }
-      if (peeCheckbox.checked) {
+      if (isPeeChecked) {
         updatedNotes = `Pee ${updatedNotes}`;
       }
     }
@@ -106,9 +115,9 @@ const App = () => {
   const deleteActivity = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this activity?");
     if (!confirmDelete) return;
-  
+
     const { error } = await supabase.from("activities").delete().eq("id", id);
-  
+
     if (error) {
       console.error("Error deleting activity:", error.message);
     } else {
@@ -223,11 +232,35 @@ const App = () => {
           {(selectedActivity === "Walk" || selectedActivity === "Backyard") && (
             <div style={{ marginBottom: "10px" }}>
               <FormControlLabel
-                control={<Checkbox id="poop-checkbox" />}
+                control={
+                  <Checkbox
+                    checked={isPoopChecked}
+                    onChange={(e) => {
+                      setIsPoopChecked(e.target.checked);
+                      if (e.target.checked) {
+                        setNotes((prev) => `Poop ${prev}`.trim());
+                      } else {
+                        setNotes((prev) => prev.replace(/Poop\s*/i, "").trim());
+                      }
+                    }}
+                  />
+                }
                 label="Poop"
               />
               <FormControlLabel
-                control={<Checkbox id="pee-checkbox" />}
+                control={
+                  <Checkbox
+                    checked={isPeeChecked}
+                    onChange={(e) => {
+                      setIsPeeChecked(e.target.checked);
+                      if (e.target.checked) {
+                        setNotes((prev) => `Pee ${prev}`.trim());
+                      } else {
+                        setNotes((prev) => prev.replace(/Pee\s*/i, "").trim());
+                      }
+                    }}
+                  />
+                }
                 label="Pee"
               />
             </div>
