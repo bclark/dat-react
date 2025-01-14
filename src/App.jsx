@@ -103,6 +103,20 @@ const App = () => {
     handleClose();
   };
 
+  const deleteActivity = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this activity?");
+    if (!confirmDelete) return;
+  
+    const { error } = await supabase.from("activities").delete().eq("id", id);
+  
+    if (error) {
+      console.error("Error deleting activity:", error.message);
+    } else {
+      console.log("Activity deleted successfully!");
+      fetchActivities(); // Refresh the list after deletion
+    }
+  };
+
   return (
     <div>
       <div className="header">Dog Activities</div>
@@ -172,6 +186,7 @@ const App = () => {
                       >
                         Edit
                       </Button>
+                      <Button variant="outlined" onClick={() => deleteActivity(activity.id)}>Delete </Button>
                     </td>
                   </tr>
                 );
