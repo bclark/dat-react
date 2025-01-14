@@ -126,6 +126,17 @@ const App = () => {
     }
   };
 
+  const groupActivitiesByDate = (activities) => {
+    return activities.reduce((groups, activity) => {
+      const date = new Date(activity.created_at).toLocaleDateString();
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(activity);
+      return groups;
+    }, {});
+  };
+
   return (
     <div>
       <div className="header">Dog Activities</div>
@@ -145,65 +156,70 @@ const App = () => {
       </div>
 
       {/* Activities Table */}
-      <h2 style={{ textAlign: "center", marginTop: "30px" }}>Activities Log</h2>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <table
-          style={{
-            borderCollapse: "collapse",
-            width: "80%",
-            marginTop: "20px",
-            border: "1px solid #ccc",
-          }}
-        >
-          <thead className="table-header">
-            <tr>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Activity</th>
-              <th>Notes</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {activities.length === 0 ? (
-              <tr>
-                <td colSpan="5" style={{ textAlign: "center", padding: "10px" }}>
-                  No activities found
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+  {Object.entries(groupActivitiesByDate(activities)).map(([date, activitiesForDate]) => (
+    <div key={date} style={{ width: "80%", marginBottom: "20px" }}>
+      {/* Date as the section title */}
+      <h3 style={{ backgroundColor: "", padding: "10px", borderRadius: "5px", textAlign: "left" }}>
+        {date}
+      </h3>
+      <table
+        style={{
+          borderCollapse: "collapse",
+          width: "100%",
+          marginTop: "10px",
+          border: "1px solid #ccc",
+        }}
+      >
+        {/* Table Header */}
+        <thead>
+          <tr style={{ backgroundColor: "#b7e1cd" }}>
+            <th style={{ border: "1px solid #ccc", padding: "8px" }}>Time</th>
+            <th style={{ border: "1px solid #ccc", padding: "8px" }}>Activity</th>
+            <th style={{ border: "1px solid #ccc", padding: "8px" }}>Notes</th>
+            <th style={{ border: "1px solid #ccc", padding: "8px" }}>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {activitiesForDate.map((activity) => {
+            const time = new Date(activity.created_at).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            return (
+              <tr key={activity.id}>
+                <td style={{ border: "1px solid #ccc", padding: "8px" }}>{time}</td>
+                <td style={{ border: "1px solid #ccc", padding: "8px" }}>{activity.name}</td>
+                <td style={{ border: "1px solid #ccc", padding: "8px" }}>
+                  {activity.notes?.replace(/poop/gi, "💩").replace(/pee/gi, "🚽") || "—"}
+                </td>
+                <td style={{ border: "1px solid #ccc", padding: "8px" }}>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => handleOpen(activity.name, activity)}
+                    style={{ marginRight: "5px" }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    onClick={() => deleteActivity(activity.id)}
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
-            ) : (
-              activities.map((activity) => {
-                const date = new Date(activity.created_at).toLocaleDateString();
-                const time = new Date(activity.created_at).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                });
-
-                return (
-                  <tr key={activity.id}>
-                    <td style={{ border: "1px solid #ccc", padding: "8px" }}>{date}</td>
-                    <td style={{ border: "1px solid #ccc", padding: "8px" }}>{time}</td>
-                    <td style={{ border: "1px solid #ccc", padding: "8px" }}>{activity.name}</td>
-                    <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                      {activity.notes?.replace(/poop/gi, "💩").replace(/pee/gi, "🚽") || "—"}
-                    </td>
-                    <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => handleOpen(activity.name, activity)}
-                      >
-                        Edit
-                      </Button>
-                      <Button variant="outlined" onClick={() => deleteActivity(activity.id)}>Delete </Button>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  ))}
+</div>
 
       {/* Modal for activity details */}
       <Modal open={open} onClose={handleClose}>
