@@ -39,7 +39,13 @@ const App = () => {
       // Edit mode: prefill values
       setEditMode(true);
       setActivityId(activity.id);
-      setCreatedAt(activity.created_at);
+      // Convert UTC to local time for datetime-local input
+      const now = new Date(activity.created_at)
+      const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+console.log(localTime); // Example: "2025-01-16T09:30"
+    setCreatedAt(localTime);
+      // const localTime = new Date(activity.created_at).toISOString();
+      // setCreatedAt(localTime);
       setNotes(activity.notes || "");
 
       // Check for 'poop' and 'pee' in the notes
@@ -52,7 +58,11 @@ const App = () => {
     } else {
       // New activity mode
       setEditMode(false);
-      setCreatedAt(new Date().toISOString());
+      // Get current UTC timestamp in the correct format for datetime-local
+      const now = new Date();
+const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+console.log(localTime); // Example: "2025-01-16T09:30"
+    setCreatedAt(localTime);
       setNotes("");
       setIsPoopChecked(false);
       setIsPeeChecked(false);
@@ -68,7 +78,7 @@ const App = () => {
 
   const saveActivity = async () => {
     let updatedNotes = notes.trim();
-
+  
     // Prepend Poop or Pee if applicable
     if (selectedActivity === "Walk" || selectedActivity === "Backyard") {
       if (isPoopChecked) {
@@ -78,37 +88,38 @@ const App = () => {
         updatedNotes = `Pee ${updatedNotes}`;
       }
     }
-
+  
+    // Convert local time to UTC before saving
+    const utcTimestamp = new Date(createdAt).toISOString();
+  
     const activityData = {
       name: selectedActivity,
-      created_at: createdAt,
+      created_at: utcTimestamp, // Save in UTC
       notes: updatedNotes,
     };
-
+  
     if (editMode) {
-      // Update existing activity
       const { error } = await supabase
         .from("activities")
         .update(activityData)
         .eq("id", activityId);
-
+  
       if (error) {
         console.error("Error updating activity:", error.message);
       } else {
         console.log("Activity updated successfully!");
       }
     } else {
-      // Insert new activity
       const { error } = await supabase.from("activities").insert([activityData]);
-
+  
       if (error) {
         console.error("Error saving activity:", error.message);
       } else {
         console.log("Activity saved successfully!");
       }
     }
-
-    fetchActivities(); // Refresh activities list
+  
+    fetchActivities();
     handleClose();
   };
 
@@ -254,7 +265,7 @@ const App = () => {
                     onChange={(e) => {
                       setIsPoopChecked(e.target.checked);
                       if (e.target.checked) {
-                        setNotes((prev) => `Poop ${prev}`.trim());
+                        setNotes((prev) => `${prev}`.trim());
                       } else {
                         setNotes((prev) => prev.replace(/Poop\s*/i, "").trim());
                       }
@@ -270,7 +281,7 @@ const App = () => {
                     onChange={(e) => {
                       setIsPeeChecked(e.target.checked);
                       if (e.target.checked) {
-                        setNotes((prev) => `Pee ${prev}`.trim());
+                        setNotes((prev) => `${prev}`.trim());
                       } else {
                         setNotes((prev) => prev.replace(/Pee\s*/i, "").trim());
                       }
@@ -286,7 +297,7 @@ const App = () => {
             multiline
             rows={3}
             fullWidth
-            value={notes}
+            value= {notes}
             onChange={(e) => setNotes(e.target.value)}
             sx={{ marginBottom: 2 }}
           />
