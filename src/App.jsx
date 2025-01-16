@@ -200,27 +200,46 @@ console.log(localTime); // Example: "2025-01-16T09:30"
 
             return (
               <tr key={activity.id}>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>{time}</td>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>{activity.name}</td>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>
+                {/* Time Column */}
+                <td
+                  style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
+                  onClick={() => handleOpen(activity.name, activity)}
+                >
+                  {time}
+                </td>
+
+                {/* Activity Column */}
+                <td
+                  style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
+                  onClick={() => handleOpen(activity.name, activity)}
+                >
+                  {activity.name}
+                </td>
+
+                {/* Notes Column */}
+                <td
+                  style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
+                  onClick={() => handleOpen(activity.name, activity)}
+                >
                   {activity.notes?.replace(/poop/gi, "💩").replace(/pee/gi, "🚽") || "—"}
                 </td>
+
                 <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     size="small"
                     onClick={() => handleOpen(activity.name, activity)}
                     style={{ marginRight: "5px" }}
                   >
                     Edit
-                  </Button>
+                  </Button> */}
                   <Button
-                    variant="outlined"
+                    // variant="outlined"
                     color="error"
-                    size="small"
+                    size="large"
                     onClick={() => deleteActivity(activity.id)}
                   >
-                    Delete
+                    🚮
                   </Button>
                 </td>
               </tr>
