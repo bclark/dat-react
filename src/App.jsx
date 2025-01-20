@@ -259,11 +259,13 @@ const App = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 400,
+            width: { xs: "90%", sm: 400 }, // Adjust width for mobile
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
+            overflowY: "auto", // Handle content overflow
+            maxHeight: "90vh", // Ensure it doesn't go beyond the viewport
           }}
         >
           <h2>{editMode ? "Edit Activity" : "New Activity"}</h2>
