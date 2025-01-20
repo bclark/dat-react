@@ -14,7 +14,7 @@ const App = () => {
   const [isPoopChecked, setIsPoopChecked] = useState(false);
   const [isPeeChecked, setIsPeeChecked] = useState(false);
 
-  const activityTypes = ["Walk", "Backyard", "Breakfast", "Dinner"];
+  const activityTypes = ["Walk", "Backyard", "Meal"];
 
   useEffect(() => {
     fetchActivities();
@@ -42,8 +42,8 @@ const App = () => {
       // Convert UTC to local time for datetime-local input
       const now = new Date(activity.created_at)
       const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-console.log(localTime); // Example: "2025-01-16T09:30"
-    setCreatedAt(localTime);
+      console.log(localTime); // Example: "2025-01-16T09:30"
+      setCreatedAt(localTime);
       // const localTime = new Date(activity.created_at).toISOString();
       // setCreatedAt(localTime);
       setNotes(activity.notes || "");
@@ -60,9 +60,9 @@ console.log(localTime); // Example: "2025-01-16T09:30"
       setEditMode(false);
       // Get current UTC timestamp in the correct format for datetime-local
       const now = new Date();
-const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-console.log(localTime); // Example: "2025-01-16T09:30"
-    setCreatedAt(localTime);
+      const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+      console.log(localTime); // Example: "2025-01-16T09:30"
+      setCreatedAt(localTime);
       setNotes("");
       setIsPoopChecked(false);
       setIsPeeChecked(false);
@@ -70,7 +70,7 @@ console.log(localTime); // Example: "2025-01-16T09:30"
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = () => { 
     setOpen(false);
     setEditMode(false);
     setActivityId(null);

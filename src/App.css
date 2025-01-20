@@ -58,7 +58,7 @@ button:hover {
 }
 
 .table-header {
-  background-color: #b7e1cd; /* Green background */
+  background-color: #5aeaa4; /* Green background */
   color: black; /* Black text for contrast */
   text-align: left; /* Align text to the left */
   font-weight: bold;
@@ -67,4 +67,37 @@ button:hover {
 
 .table-header th {
   padding: 10px; /* Add padding for spacing */
+}
+
+/* Dark Mode Styles */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #ffffff;
+  }
+
+  table {
+    border: 1px solid #444;
+  }
+
+
+  th, td {
+    border: 1px solid #444;
+    color: #ffffff;
+  }
+
+  /* h3 {
+    color: #ffffff;
+    background-color: #333333;
+  } */
+
+  button {
+    background-color: #444;
+    color: #ffffff;
+    border: 1px solid #666;
+  }
+
+  button:hover {
+    background-color: #555;
+  }
 }
