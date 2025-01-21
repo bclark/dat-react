@@ -100,4 +100,17 @@ button:hover {
   button:hover {
     background-color: #555;
   }
+  
+}
+
+/* Default (light mode) styles */
+.modal-checkbox-label {
+  color: black; /* Default text color */
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .modal-checkbox-label {
+    color: white; /* Change text color for dark mode */
+  }
 }
