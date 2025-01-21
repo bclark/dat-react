@@ -294,6 +294,7 @@ const App = () => {
                   />
                 }
                 label="Poop"
+                className="modal-checkbox-label"
               />
               <FormControlLabel
                 control={
@@ -310,6 +311,7 @@ const App = () => {
                   />
                 }
                 label="Pee"
+                className="modal-checkbox-label"
               />
             </div>
           )}
