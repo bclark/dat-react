@@ -150,6 +150,8 @@ const App = () => {
 
   return (
     <div>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"></link>
+
       <div className="header">Dog Activities</div>
 
       {/* Buttons for each activity type */}
@@ -253,85 +255,72 @@ const App = () => {
 
       {/* Modal for activity details */}
       <Modal open={open} onClose={handleClose}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: { xs: "90%", sm: 400 }, // Adjust width for mobile
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-            overflowY: "auto", // Handle content overflow
-            maxHeight: "90vh", // Ensure it doesn't go beyond the viewport
-          }}
-        >
-          <h2>{editMode ? "Edit Activity" : "New Activity"}</h2>
-          <TextField
-            label="Timestamp"
-            type="datetime-local"
-            fullWidth
-            value={createdAt.slice(0, 16)}
-            onChange={(e) => setCreatedAt(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-          {(selectedActivity === "Walk" || selectedActivity === "Backyard") && (
-            <div style={{ marginBottom: "10px" }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isPoopChecked}
-                    onChange={(e) => {
-                      setIsPoopChecked(e.target.checked);
-                      if (e.target.checked) {
-                        setNotes((prev) => `${prev}`.trim());
-                      } else {
-                        setNotes((prev) => prev.replace(/Poop\s*/i, "").trim());
-                      }
-                    }}
-                  />
-                }
-                label="Poop"
-                className="modal-checkbox-label"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isPeeChecked}
-                    onChange={(e) => {
-                      setIsPeeChecked(e.target.checked);
-                      if (e.target.checked) {
-                        setNotes((prev) => `${prev}`.trim());
-                      } else {
-                        setNotes((prev) => prev.replace(/Pee\s*/i, "").trim());
-                      }
-                    }}
-                  />
-                }
-                label="Pee"
-                className="modal-checkbox-label"
-              />
-            </div>
-          )}
-          <TextField
-            label="Notes"
-            multiline
-            rows={3}
-            fullWidth
-            value= {notes}
-            onChange={(e) => setNotes(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-          <Button variant="contained" onClick={saveActivity} sx={{ marginRight: 2 }}>
-            Save
-          </Button>
-          <Button variant="outlined" onClick={handleClose}>
-            Cancel
-          </Button>
-        </Box>
-      </Modal>
+  <Box
+    sx={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: { xs: "90%", sm: 400 },
+      bgcolor: "background.paper",
+      boxShadow: 24,
+      p: 4,
+      borderRadius: "16px",
+      display: "flex",
+      flexDirection: "column",
+      gap: 2,
+    }}
+  >
+    <h2 style={{ marginBottom: "16px" }}>
+      {editMode ? "Edit Activity" : "New Activity"}
+    </h2>
+    <TextField
+      label="Timestamp"
+      type="datetime-local"
+      fullWidth
+      value={createdAt.slice(0, 16)}
+      onChange={(e) => setCreatedAt(e.target.value)}
+    />
+    {(selectedActivity === "Walk" || selectedActivity === "Backyard") && (
+      <div style={{ display: "flex", gap: "10px" }}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isPoopChecked}
+              onChange={(e) => setIsPoopChecked(e.target.checked)}
+            />
+          }
+          label="Poop"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isPeeChecked}
+              onChange={(e) => setIsPeeChecked(e.target.checked)}
+            />
+          }
+          label="Pee"
+        />
+      </div>
+    )}
+    <TextField
+      label="Notes"
+      multiline
+      rows={3}
+      fullWidth
+      value={notes}
+      onChange={(e) => setNotes(e.target.value)}
+    />
+    <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <Button variant="contained" color="primary" onClick={saveActivity}>
+        Save
+      </Button>
+      <Button variant="outlined" color="secondary" onClick={handleClose}>
+        Cancel
+      </Button>
+    </div>
+  </Box>
+</Modal>
     </div>
   );
 };
