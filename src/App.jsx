@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Box, TextField, Button, Checkbox, FormControlLabel } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Modal, Box, TextField, Button, Checkbox, FormControlLabel, Typography } from "@mui/material";
 import { supabase } from "./utils/supabase";
 import "./App.css";
 
@@ -70,7 +70,7 @@ const App = () => {
     setOpen(true);
   };
 
-  const handleClose = () => { 
+  const handleClose = () => {
     setOpen(false);
     setEditMode(false);
     setActivityId(null);
@@ -78,7 +78,7 @@ const App = () => {
 
   const saveActivity = async () => {
     let updatedNotes = notes.trim();
-  
+
     // Prepend Poop or Pee if applicable
     if (selectedActivity === "Walk" || selectedActivity === "Backyard") {
       if (isPoopChecked) {
@@ -88,22 +88,22 @@ const App = () => {
         updatedNotes = `Pee ${updatedNotes}`;
       }
     }
-  
+
     // Convert local time to UTC before saving
     const utcTimestamp = new Date(createdAt).toISOString();
-  
+
     const activityData = {
       name: selectedActivity,
       created_at: utcTimestamp, // Save in UTC
       notes: updatedNotes,
     };
-  
+
     if (editMode) {
       const { error } = await supabase
         .from("activities")
         .update(activityData)
         .eq("id", activityId);
-  
+
       if (error) {
         console.error("Error updating activity:", error.message);
       } else {
@@ -111,14 +111,14 @@ const App = () => {
       }
     } else {
       const { error } = await supabase.from("activities").insert([activityData]);
-  
+
       if (error) {
         console.error("Error saving activity:", error.message);
       } else {
         console.log("Activity saved successfully!");
       }
     }
-  
+
     fetchActivities();
     handleClose();
   };
@@ -150,7 +150,7 @@ const App = () => {
 
   return (
     <div>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"></link>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"></link>
 
       <div className="header">Dog Activities</div>
 
@@ -170,64 +170,64 @@ const App = () => {
 
       {/* Activities Table */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-  {Object.entries(groupActivitiesByDate(activities)).map(([date, activitiesForDate]) => (
-    <div key={date} style={{ width: "80%", marginBottom: "20px" }}>
-      {/* Date as the section title */}
-      <h3 style={{ backgroundColor: "", padding: "10px", borderRadius: "5px", textAlign: "left" }}>
-        {date}
-      </h3>
-      <table
-        style={{
-          borderCollapse: "collapse",
-          width: "100%",
-          marginTop: "10px",
-          border: "1px solid #ccc",
-        }}
-      >
-        {/* Table Header */}
-        <thead>
-          <tr style={{ backgroundColor: "#b7e1cd" }}>
-            <th style={{ border: "1px solid #ccc", padding: "8px" }}>Time</th>
-            <th style={{ border: "1px solid #ccc", padding: "8px" }}>Activity</th>
-            <th style={{ border: "1px solid #ccc", padding: "8px" }}>Notes</th>
-            <th style={{ border: "1px solid #ccc", padding: "8px" }}>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {activitiesForDate.map((activity) => {
-            const time = new Date(activity.created_at).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
+        {Object.entries(groupActivitiesByDate(activities)).map(([date, activitiesForDate]) => (
+          <div key={date} style={{ width: "80%", marginBottom: "20px" }}>
+            {/* Date as the section title */}
+            <h3 style={{ backgroundColor: "", padding: "10px", borderRadius: "5px", textAlign: "left" }}>
+              {date}
+            </h3>
+            <table
+              style={{
+                borderCollapse: "collapse",
+                width: "100%",
+                marginTop: "10px",
+                border: "1px solid #ccc",
+              }}
+            >
+              {/* Table Header */}
+              <thead>
+                <tr style={{ backgroundColor: "#b7e1cd" }}>
+                  <th style={{ border: "1px solid #ccc", padding: "8px" }}>Time</th>
+                  <th style={{ border: "1px solid #ccc", padding: "8px" }}>Activity</th>
+                  <th style={{ border: "1px solid #ccc", padding: "8px" }}>Notes</th>
+                  <th style={{ border: "1px solid #ccc", padding: "8px" }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {activitiesForDate.map((activity) => {
+                  const time = new Date(activity.created_at).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
 
-            return (
-              <tr key={activity.id}>
-                {/* Time Column */}
-                <td
-                  style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
-                  onClick={() => handleOpen(activity.name, activity)}
-                >
-                  {time}
-                </td>
+                  return (
+                    <tr key={activity.id}>
+                      {/* Time Column */}
+                      <td
+                        style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
+                        onClick={() => handleOpen(activity.name, activity)}
+                      >
+                        {time}
+                      </td>
 
-                {/* Activity Column */}
-                <td
-                  style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
-                  onClick={() => handleOpen(activity.name, activity)}
-                >
-                  {activity.name}
-                </td>
+                      {/* Activity Column */}
+                      <td
+                        style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
+                        onClick={() => handleOpen(activity.name, activity)}
+                      >
+                        {activity.name}
+                      </td>
 
-                {/* Notes Column */}
-                <td
-                  style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
-                  onClick={() => handleOpen(activity.name, activity)}
-                >
-                  {activity.notes?.replace(/poop/gi, "💩").replace(/pee/gi, "🚽") || "—"}
-                </td>
+                      {/* Notes Column */}
+                      <td
+                        style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
+                        onClick={() => handleOpen(activity.name, activity)}
+                      >
+                        {activity.notes?.replace(/poop/gi, "💩").replace(/pee/gi, "🚽") || "—"}
+                      </td>
 
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  {/* <Button
+                      <td style={{ border: "1px solid #ccc", padding: "8px" }}>
+                        {/* <Button
                     variant="outlined"
                     size="small"
                     onClick={() => handleOpen(activity.name, activity)}
@@ -235,92 +235,105 @@ const App = () => {
                   >
                     Edit
                   </Button> */}
-                  <Button
-                    // variant="outlined"
-                    color="error"
-                    size="large"
-                    onClick={() => deleteActivity(activity.id)}
-                  >
-                    🚮
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  ))}
-</div>
+                        <Button
+                          // variant="outlined"
+                          color="error"
+                          size="large"
+                          onClick={() => deleteActivity(activity.id)}
+                        >
+                          🚮
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ))}
+      </div>
 
       {/* Modal for activity details */}
       <Modal open={open} onClose={handleClose}>
-  <Box
-    sx={{
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      width: { xs: "90%", sm: 400 },
-      bgcolor: "background.paper",
-      boxShadow: 24,
-      p: 4,
-      borderRadius: "16px",
-      display: "flex",
-      flexDirection: "column",
-      gap: 2,
-    }}
-  >
-    <h2 style={{ marginBottom: "16px" }}>
-      {editMode ? "Edit Activity" : "New Activity"}
-    </h2>
-    <TextField
-      label="Timestamp"
-      type="datetime-local"
-      fullWidth
-      value={createdAt.slice(0, 16)}
-      onChange={(e) => setCreatedAt(e.target.value)}
-    />
-    {(selectedActivity === "Walk" || selectedActivity === "Backyard") && (
-      <div style={{ display: "flex", gap: "10px" }}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isPoopChecked}
-              onChange={(e) => setIsPoopChecked(e.target.checked)}
-            />
-          }
-          label="Poop"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isPeeChecked}
-              onChange={(e) => setIsPeeChecked(e.target.checked)}
-            />
-          }
-          label="Pee"
-        />
-      </div>
-    )}
-    <TextField
-      label="Notes"
-      multiline
-      rows={3}
-      fullWidth
-      value={notes}
-      onChange={(e) => setNotes(e.target.value)}
-    />
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
-      <Button variant="contained" color="primary" onClick={saveActivity}>
-        Save
-      </Button>
-      <Button variant="outlined" color="secondary" onClick={handleClose}>
-        Cancel
-      </Button>
-    </div>
-  </Box>
-</Modal>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: { xs: "90%", sm: 400 },
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: "16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              color: (theme) => theme.palette.mode === "dark" ? "white" : "black",
+              marginBottom: "16px"
+            }}
+          >
+            {editMode ? `Edit ${selectedActivity}` : `New ${selectedActivity}`}
+          </Typography>
+          <TextField
+            label="Timestamp"
+            type="datetime-local"
+            fullWidth
+            value={createdAt.slice(0, 16)}
+            onChange={(e) => setCreatedAt(e.target.value)}
+          />
+          {(selectedActivity === "Walk" || selectedActivity === "Backyard") && (
+            <div style={{ display: "flex", gap: "10px" }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isPoopChecked}
+                    onChange={(e) => setIsPoopChecked(e.target.checked)}
+                  />
+                }
+                label="Poop"
+                sx={{
+                  color: (theme) => theme.palette.mode === "dark" ? "white" : "black"
+                }}
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isPeeChecked}
+                    onChange={(e) => setIsPeeChecked(e.target.checked)}
+                  />
+                }
+                label="Pee"
+                sx={{
+                  color: (theme) => theme.palette.mode === "dark" ? "white" : "black"
+                }}
+              />
+            </div>
+          )}
+          <TextField
+            label="Notes"
+            multiline
+            rows={3}
+            fullWidth
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Button variant="contained" color="primary" onClick={saveActivity}>
+              Save
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };
