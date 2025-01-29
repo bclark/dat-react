@@ -40,17 +40,25 @@ const App = () => {
       // Edit mode: Prefill values
       setEditMode(true);
       setActivityId(activity.id);
-      setCreatedAt(activity.created_at);
+      // Convert UTC to local time for datetime-local input
+      const now = new Date(activity.created_at)
+      const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+      console.log(localTime); // Example: "2025-01-16T09:30"
+      setCreatedAt(localTime);
       setNotes(activity.notes || "");
   
       // Check for 'poop' and 'pee' in the notes
       setIsPoopChecked(activity.notes?.toLowerCase().includes("poop"));
       setIsPeeChecked(activity.notes?.toLowerCase().includes("pee"));
+      setNotes((prev) => prev.replace(/poop\s*/i, "").replace(/pee\s*/i, ""));
     } else {
       // New activity mode
       setEditMode(false);
-      setCreatedAt(new Date().toISOString().slice(0, 16));
-      setNotes("");
+      // Get current UTC timestamp in the correct format for datetime-local
+      const now = new Date();
+      const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+      console.log(localTime); // Example: "2025-01-16T09:30"
+      setCreatedAt(localTime);
       setIsPoopChecked(false);
       setIsPeeChecked(true); // Default to checked
     }
