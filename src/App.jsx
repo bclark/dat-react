@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
-import { Modal, Box, TextField, Button, Checkbox, FormControlLabel, Typography } from "@mui/material";
+import {
+  Modal, Box, TextField, Button, Checkbox, FormControlLabel, Typography,
+  Container, Stack, Grid
+} from "@mui/material";
 import { supabase } from "./utils/supabase";
-import "./App.css";
 import ActivityTable from "./components/ActivityTable";
 
 const App = () => {
   const [activities, setActivities] = useState([]);
   const [open, setOpen] = useState(false);
-  const [editMode, setEditMode] = useState(false); // New state for edit mode
+  const [editMode, setEditMode] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
-  const [activityId, setActivityId] = useState(null); // ID for the activity being edited
+  const [activityId, setActivityId] = useState(null);
   const [createdAt, setCreatedAt] = useState("");
   const [notes, setNotes] = useState("");
   const [isPoopChecked, setIsPoopChecked] = useState(false);
@@ -36,149 +38,49 @@ const App = () => {
 
   const handleOpen = (activityName, activity = null) => {
     setSelectedActivity(activityName);
-  
+
     if (activity) {
-      // Edit mode: Prefill values
       setEditMode(true);
       setActivityId(activity.id);
-      // Convert UTC to local time for datetime-local input
-      const now = new Date(activity.created_at)
+      const now = new Date(activity.created_at);
       const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-      console.log(localTime); // Example: "2025-01-16T09:30"
       setCreatedAt(localTime);
       setNotes(activity.notes || "");
-  
-      // Check for 'poop' and 'pee' in the notes
       setIsPoopChecked(activity.notes?.toLowerCase().includes("poop"));
       setIsPeeChecked(activity.notes?.toLowerCase().includes("pee"));
       setNotes((prev) => prev.replace(/poop\s*/i, "").replace(/pee\s*/i, ""));
     } else {
-      // New activity mode
       setEditMode(false);
-      // Get current UTC timestamp in the correct format for datetime-local
       const now = new Date();
       const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-      console.log(localTime); // Example: "2025-01-16T09:30"
       setCreatedAt(localTime);
       setIsPoopChecked(false);
-      setIsPeeChecked(true); // Default to checked
+      setIsPeeChecked(true);
     }
-  
+
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setEditMode(false);
-    setActivityId(null);
-  };
-
-  const saveActivity = async () => {
-    let updatedNotes = notes.trim();
-
-    // Prepend Poop or Pee if applicable
-    if (selectedActivity === "Walk" || selectedActivity === "Backyard") {
-      if (isPoopChecked) {
-        updatedNotes = `Poop ${updatedNotes}`;
-      }
-      if (isPeeChecked) {
-        updatedNotes = `Pee ${updatedNotes}`;
-      }
-    }
-
-    // Convert local time to UTC before saving
-    const utcTimestamp = new Date(createdAt).toISOString();
-
-    const activityData = {
-      name: selectedActivity,
-      created_at: utcTimestamp, // Save in UTC
-      notes: updatedNotes,
-    };
-
-    if (editMode) {
-      const { error } = await supabase
-        .from("activities")
-        .update(activityData)
-        .eq("id", activityId);
-
-      if (error) {
-        console.error("Error updating activity:", error.message);
-      } else {
-        console.log("Activity updated successfully!");
-      }
-    } else {
-      const { error } = await supabase.from("activities").insert([activityData]);
-
-      if (error) {
-        console.error("Error saving activity:", error.message);
-      } else {
-        console.log("Activity saved successfully!");
-      }
-    }
-
-    fetchActivities();
-    handleClose();
-  };
-
-  const deleteActivity = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this activity?");
-    if (!confirmDelete) return;
-
-    const { error } = await supabase.from("activities").delete().eq("id", id);
-
-    if (error) {
-      console.error("Error deleting activity:", error.message);
-    } else {
-      console.log("Activity deleted successfully!");
-      fetchActivities(); // Refresh the list after deletion
-    }
-  };
-
-  const groupActivitiesByDate = (activities) => {
-    return activities.reduce((groups, activity) => {
-      const date = new Date(activity.created_at).toLocaleDateString();
-      if (!groups[date]) {
-        groups[date] = [];
-      }
-      groups[date].push(activity);
-      return groups;
-    }, {});
-  };
-
   return (
-    <div>
-      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"></link>
+    <Container maxWidth="md" sx={{ mt: 4, textAlign: "center" }}>
+      <Typography variant="h4" gutterBottom>
+        Dog Activities
+      </Typography>
 
-      <div className="header">Dog Activities</div>
-
-      {/* Buttons for each activity type */}
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
+      {/* Buttons for each activity */}
+      <Stack direction="row" spacing={2} justifyContent="center" sx={{ flexWrap: "wrap", mb: 3 }}>
         {activityTypes.map((type) => (
-          <Button
-            key={type}
-            variant="contained"
-            style={{ margin: "5px" }}
-            onClick={() => handleOpen(type)}
-          >
+          <Button key={type} variant="contained" onClick={() => handleOpen(type)}>
             {type}
           </Button>
         ))}
-      </div>
+      </Stack>
 
       {/* Activities Table */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        {Object.entries(groupActivitiesByDate(activities)).map(([date, activitiesForDate]) => (
-          <ActivityTable
-            key={date}
-            date={date}
-            activitiesForDate={activitiesForDate}
-            handleOpen={handleOpen}
-            deleteActivity={deleteActivity} />
-        ))}
-      </div>
+      <ActivityTable activities={activities} handleOpen={handleOpen} />
 
-      {/* Modal for activity details */}
-      <Modal open={open} onClose={handleClose}>
+      {/* Modal for editing activity */}
+      <Modal open={open} onClose={() => setOpen(false)}>
         <Box
           sx={{
             position: "absolute",
@@ -188,20 +90,11 @@ const App = () => {
             width: { xs: "90%", sm: 400 },
             bgcolor: "background.paper",
             boxShadow: 24,
-            p: 4,
+            p: { xs: 3, sm: 4 }, // Adds more padding on mobile
             borderRadius: "16px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
           }}
         >
-          <Typography
-            variant="h6"
-            sx={{
-              color: (theme) => theme.palette.mode === "dark" ? "white" : "black",
-              marginBottom: "16px"
-            }}
-          >
+          <Typography variant="h6" sx={{ mb: 2 }}>
             {editMode ? `Edit ${selectedActivity}` : `New ${selectedActivity}`}
           </Typography>
           <TextField
@@ -210,55 +103,22 @@ const App = () => {
             fullWidth
             value={createdAt.slice(0, 16)}
             onChange={(e) => setCreatedAt(e.target.value)}
+            sx={{ mb: 2 }}
           />
           {(selectedActivity === "Walk" || selectedActivity === "Backyard") && (
-            <div style={{ display: "flex", gap: "10px" }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isPoopChecked}
-                    onChange={(e) => setIsPoopChecked(e.target.checked)}
-                  />
-                }
-                label="Poop"
-                sx={{
-                  color: (theme) => theme.palette.mode === "dark" ? "white" : "black"
-                }}
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isPeeChecked}
-                    onChange={(e) => setIsPeeChecked(e.target.checked)}
-                  />
-                }
-                label="Pee"
-                sx={{
-                  color: (theme) => theme.palette.mode === "dark" ? "white" : "black"
-                }}
-              />
-            </div>
+            <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+              <FormControlLabel control={<Checkbox checked={isPoopChecked} />} label="Poop" />
+              <FormControlLabel control={<Checkbox checked={isPeeChecked} />} label="Pee" />
+            </Stack>
           )}
-          <TextField
-            label="Notes"
-            multiline
-            rows={3}
-            fullWidth
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-          />
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Button variant="contained" color="primary" onClick={saveActivity}>
-              Save
-            </Button>
-            <Button variant="outlined" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-          </div>
+          <TextField label="Notes" multiline rows={3} fullWidth value={notes} sx={{ mb: 2 }} />
+          <Stack direction="row" spacing={2} justifyContent="space-between">
+            <Button variant="contained">Save</Button>
+            <Button variant="outlined" onClick={() => setOpen(false)}>Cancel</Button>
+          </Stack>
         </Box>
       </Modal>
-    </div>
+    </Container>
   );
 };
 
