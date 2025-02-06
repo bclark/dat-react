@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal, Box, TextField, Button, Checkbox, FormControlLabel, Typography } from "@mui/material";
 import { supabase } from "./utils/supabase";
 import "./App.css";
+import ActivityTable from "./components/ActivityTable";
 
 const App = () => {
   const [activities, setActivities] = useState([]);
@@ -167,85 +168,12 @@ const App = () => {
       {/* Activities Table */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         {Object.entries(groupActivitiesByDate(activities)).map(([date, activitiesForDate]) => (
-          <div key={date} style={{ width: "80%", marginBottom: "20px" }}>
-            {/* Date as the section title */}
-            <h3 style={{ backgroundColor: "", padding: "10px", borderRadius: "5px", textAlign: "left" }}>
-              {date}
-            </h3>
-            <table
-              style={{
-                borderCollapse: "collapse",
-                width: "100%",
-                marginTop: "10px",
-                border: "1px solid #ccc",
-              }}
-            >
-              {/* Table Header */}
-              <thead>
-                <tr style={{ backgroundColor: "#b7e1cd" }}>
-                  <th style={{ border: "1px solid #ccc", padding: "8px" }}>Time</th>
-                  <th style={{ border: "1px solid #ccc", padding: "8px" }}>Activity</th>
-                  <th style={{ border: "1px solid #ccc", padding: "8px" }}>Notes</th>
-                  <th style={{ border: "1px solid #ccc", padding: "8px" }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {activitiesForDate.map((activity) => {
-                  const time = new Date(activity.created_at).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  });
-
-                  return (
-                    <tr key={activity.id}>
-                      {/* Time Column */}
-                      <td
-                        style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
-                        onClick={() => handleOpen(activity.name, activity)}
-                      >
-                        {time}
-                      </td>
-
-                      {/* Activity Column */}
-                      <td
-                        style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
-                        onClick={() => handleOpen(activity.name, activity)}
-                      >
-                        {activity.name}
-                      </td>
-
-                      {/* Notes Column */}
-                      <td
-                        style={{ border: "1px solid #ccc", padding: "8px", cursor: "pointer" }}
-                        onClick={() => handleOpen(activity.name, activity)}
-                      >
-                        {activity.notes?.replace(/poop/gi, "💩").replace(/pee/gi, "🚽") || "—"}
-                      </td>
-
-                      <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                        {/* <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={() => handleOpen(activity.name, activity)}
-                    style={{ marginRight: "5px" }}
-                  >
-                    Edit
-                  </Button> */}
-                        <Button
-                          // variant="outlined"
-                          color="error"
-                          size="large"
-                          onClick={() => deleteActivity(activity.id)}
-                        >
-                          🚮
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <ActivityTable
+            key={date}
+            date={date}
+            activitiesForDate={activitiesForDate}
+            handleOpen={handleOpen}
+            deleteActivity={deleteActivity} />
         ))}
       </div>
 
