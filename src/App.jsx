@@ -159,24 +159,25 @@ const App = () => {
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, textAlign: "center" }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography 
+        variant="h4" 
+        gutterBottom
+        onClick={exportToCSV}
+        sx={{ 
+          cursor: 'pointer',
+          userSelect: 'none',
+        }}
+      >
         Dog Activities
       </Typography>
 
-      {/* Activity buttons and Export button */}
+      {/* Activity buttons */}
       <Stack direction="row" spacing={2} justifyContent="center" sx={{ flexWrap: "wrap", mb: 3 }}>
         {activityTypes.map((type) => (
           <Button key={type} variant="contained" onClick={() => handleOpen(type)}>
             {type}
           </Button>
         ))}
-        <Button 
-          variant="outlined" 
-          onClick={exportToCSV}
-          sx={{ ml: 2 }}
-        >
-          Export CSV
-        </Button>
       </Stack>
 
       {/* Activities Table */}
