@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
-  Modal, Box, TextField, Button, Checkbox, FormControlLabel, Typography,
-  Container, Stack, Grid
+  Button, Typography,
+  Container, Stack
 } from "@mui/material";
 import { supabase } from "./utils/supabase";
 import ActivityTable from "./components/ActivityTable";
@@ -132,63 +132,57 @@ const App = () => {
     setOpen(false);
   }
 
+  const exportToCSV = () => {
+    // Convert activities to CSV format
+    const headers = ['Activity', 'Date' ,'Time', 'Notes'];
+    const csvContent = [
+      headers.join(','), // Header row
+      ...activities.map(activity => {
+        const date = new Date(activity.created_at).toLocaleString();
+        // Escape quotes in notes and wrap field in quotes to handle commas
+        const escapedNotes = activity.notes ? `"${activity.notes.replace(/"/g, '""')}"` : '';
+        return [activity.name, date, escapedNotes].join(',');
+      })
+    ].join('\n');
+
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'dog_activities.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Container maxWidth="md" sx={{ mt: 4, textAlign: "center" }}>
       <Typography variant="h4" gutterBottom>
         Dog Activities
       </Typography>
 
-      {/* Buttons for each activity */}
+      {/* Activity buttons and Export button */}
       <Stack direction="row" spacing={2} justifyContent="center" sx={{ flexWrap: "wrap", mb: 3 }}>
         {activityTypes.map((type) => (
           <Button key={type} variant="contained" onClick={() => handleOpen(type)}>
             {type}
           </Button>
         ))}
+        <Button 
+          variant="outlined" 
+          onClick={exportToCSV}
+          sx={{ ml: 2 }}
+        >
+          Export CSV
+        </Button>
       </Stack>
 
       {/* Activities Table */}
       <ActivityTable activities={activities} handleOpen={handleOpen} deleteActivity={deleteActivity} />
 
       {/* Modal for editing activity */}
-      {/* <Modal open={open} onClose={() => setOpen(false)}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: { xs: "90%", sm: 400 },
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: { xs: 3, sm: 4 }, // Adds more padding on mobile
-            borderRadius: "16px",
-          }}
-        >
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            {editMode ? `Edit ${selectedActivity}` : `New ${selectedActivity}`}
-          </Typography>
-          <TextField
-            label="Timestamp"
-            type="datetime-local"
-            fullWidth
-            value={createdAt.slice(0, 16)}
-            onChange={(e) => setCreatedAt(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          {(selectedActivity === "Walk" || selectedActivity === "Backyard") && (
-            <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-              <FormControlLabel control={<Checkbox checked={isPoopChecked} />} label="Poop" />
-              <FormControlLabel control={<Checkbox checked={isPeeChecked} />} label="Pee" />
-            </Stack>
-          )}
-          <TextField label="Notes" multiline rows={3} fullWidth value={notes} sx={{ mb: 2 }} />
-          <Stack direction="row" spacing={2} justifyContent="space-between">
-            <Button variant="contained">Save</Button>
-            <Button variant="outlined" onClick={() => setOpen(false)}>Cancel</Button>
-          </Stack>
-        </Box>
-      </Modal> */}
       <ActivityModal
         open={open}
         handleClose={handleClose}
