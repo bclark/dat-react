@@ -5,6 +5,7 @@ import {
 } from "@mui/material";
 import { supabase } from "./utils/supabase";
 import ActivityTable from "./components/ActivityTable";
+import ActivityModal from "./components/ActivityModal";
 
 const App = () => {
   const [activities, setActivities] = useState([]);
@@ -36,6 +37,66 @@ const App = () => {
     }
   };
 
+  const saveActivity = async () => {
+    let updatedNotes = notes.trim();
+
+    // Prepend Poop or Pee if applicable
+    if (selectedActivity === "Walk" || selectedActivity === "Backyard") {
+      if (isPoopChecked) {
+        updatedNotes = `Poop ${updatedNotes}`;
+      }
+      if (isPeeChecked) {
+        updatedNotes = `Pee ${updatedNotes}`;
+      }
+    }
+
+    // Convert local time to UTC before saving
+    const utcTimestamp = new Date(createdAt).toISOString();
+
+    const activityData = {
+      name: selectedActivity,
+      created_at: utcTimestamp, // Save in UTC
+      notes: updatedNotes,
+    };
+
+    if (editMode) {
+      const { error } = await supabase
+        .from("activities")
+        .update(activityData)
+        .eq("id", activityId);
+
+      if (error) {
+        console.error("Error updating activity:", error.message);
+      } else {
+        console.log("Activity updated successfully!");
+      }
+    } else {
+      const { error } = await supabase.from("activities").insert([activityData]);
+
+      if (error) {
+        console.error("Error saving activity:", error.message);
+      } else {
+        console.log("Activity saved successfully!");
+      }
+    }
+
+    
+  };
+
+  const deleteActivity = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this activity?");
+    if (!confirmDelete) return;
+
+    const { error } = await supabase.from("activities").delete().eq("id", id);
+
+    if (error) {
+      console.error("Error deleting activity:", error.message);
+    } else {
+      console.log("Activity deleted successfully!");
+      fetchActivities(); // Refresh the list after deletion
+    }
+  };
+
   const handleOpen = (activityName, activity = null) => {
     setSelectedActivity(activityName);
 
@@ -61,6 +122,16 @@ const App = () => {
     setOpen(true);
   };
 
+  const handleSave = async () => {
+    await saveActivity(); // Save activity
+    fetchActivities();
+    handleClose(); // Close the modal after saving
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   return (
     <Container maxWidth="md" sx={{ mt: 4, textAlign: "center" }}>
       <Typography variant="h4" gutterBottom>
@@ -77,10 +148,10 @@ const App = () => {
       </Stack>
 
       {/* Activities Table */}
-      <ActivityTable activities={activities} handleOpen={handleOpen} />
+      <ActivityTable activities={activities} handleOpen={handleOpen} deleteActivity={deleteActivity} />
 
       {/* Modal for editing activity */}
-      <Modal open={open} onClose={() => setOpen(false)}>
+      {/* <Modal open={open} onClose={() => setOpen(false)}>
         <Box
           sx={{
             position: "absolute",
@@ -117,7 +188,22 @@ const App = () => {
             <Button variant="outlined" onClick={() => setOpen(false)}>Cancel</Button>
           </Stack>
         </Box>
-      </Modal>
+      </Modal> */}
+      <ActivityModal
+        open={open}
+        handleClose={handleClose}
+        editMode={editMode}
+        selectedActivity={selectedActivity}
+        createdAt={createdAt}
+        setCreatedAt={setCreatedAt}
+        notes={notes}
+        setNotes={setNotes}
+        isPoopChecked={isPoopChecked}
+        setIsPoopChecked={setIsPoopChecked}
+        isPeeChecked={isPeeChecked}
+        setIsPeeChecked={setIsPeeChecked}
+        saveActivity={handleSave}
+      />
     </Container>
   );
 };
