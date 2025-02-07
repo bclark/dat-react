@@ -176,14 +176,15 @@ const App = () => {
 
       {/* Activity buttons */}
       <Stack 
-        direction={{ xs: 'column', sm: 'row' }} 
-        spacing={2} 
-        alignItems="center"
+        direction="row"
         sx={{ 
           mb: 3,
-          width: '100%',
-          maxWidth: { xs: '200px', sm: 'none' },
-          margin: '0 auto 24px auto'
+          flexWrap: 'wrap',
+          gap: 2,
+          justifyContent: 'center',
+          '& > *': {  // This targets all direct children
+            margin: '4px !important'  // Override Stack spacing
+          }
         }}
       >
         {activityTypes.map((type) => (
@@ -192,8 +193,8 @@ const App = () => {
             variant="contained" 
             onClick={() => handleOpen(type)}
             sx={{ 
-              width: '100%',
-              minWidth: { xs: '150px', sm: 'auto' }
+              width: '140px',
+              height: '40px'  // Fixed height for consistency
             }}
           >
             {type}
