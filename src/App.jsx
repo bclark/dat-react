@@ -3,11 +3,8 @@ import {
   Button, Typography,
   Container, Stack, Box
 } from "@mui/material";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PetsIcon from '@mui/icons-material/Pets';
-import WaterDropIcon from '@mui/icons-material/WaterDrop';
+
 import { supabase } from "./utils/supabase";
-import { calculateStatsWithTrend, getTrendIcon, getWalkTrendIcon } from "./utils/statsCalculator";
 import ActivityTable from "./components/ActivityTable";
 import ActivityModal from "./components/ActivityModal";
 import Stats from "./components/Stats";
@@ -22,7 +19,7 @@ const App = () => {
   const [notes, setNotes] = useState("");
   const [isPoopChecked, setIsPoopChecked] = useState(false);
   const [isPeeChecked, setIsPeeChecked] = useState(false);
-  const [statsExpanded, setStatsExpanded] = useState(true);
+  const [statsExpanded, setStatsExpanded] = useState(false);
 
   const activityTypes = ["Walk", "Backyard", "Meal"];
 

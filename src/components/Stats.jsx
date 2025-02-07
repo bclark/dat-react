@@ -13,14 +13,19 @@ const Stats = ({ activities, expanded, onToggle }) => {
 
   return (
     <Stack spacing={2}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack 
+        direction="row" 
+        justifyContent="space-between" 
+        alignItems="center"
+        sx={{ pb: expanded ? 0 : 1 }}
+      >
         <Typography variant="h6">Statistics</Typography>
         <IconButton onClick={onToggle}>
           {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </IconButton>
       </Stack>
       
-      <Collapse in={expanded}>
+      <Collapse in={expanded} sx={{ mt: '0 !important' }}>
         <Stack spacing={2}>
           <Stack 
             direction="row" 
