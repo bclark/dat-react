@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import {
   Button, Typography,
-  Container, Stack
+  Container, Stack, Box
 } from "@mui/material";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PetsIcon from '@mui/icons-material/Pets';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import { supabase } from "./utils/supabase";
+import { calculateStatsWithTrend, getTrendIcon, getWalkTrendIcon } from "./utils/statsCalculator";
 import ActivityTable from "./components/ActivityTable";
 import ActivityModal from "./components/ActivityModal";
+import Stats from "./components/Stats";
 
 const App = () => {
   const [activities, setActivities] = useState([]);
@@ -17,6 +22,7 @@ const App = () => {
   const [notes, setNotes] = useState("");
   const [isPoopChecked, setIsPoopChecked] = useState(false);
   const [isPeeChecked, setIsPeeChecked] = useState(false);
+  const [statsExpanded, setStatsExpanded] = useState(true);
 
   const activityTypes = ["Walk", "Backyard", "Meal"];
 
@@ -179,6 +185,22 @@ const App = () => {
           </Button>
         ))}
       </Stack>
+
+      {/* Stats Section */}
+      <Box sx={{ 
+        mb: 3, 
+        p: 2, 
+        bgcolor: 'background.paper', 
+        borderRadius: 1,
+        boxShadow: 1,
+        border: '1px solid rgba(0, 0, 0, 0.12)'
+      }}>
+        <Stats 
+          activities={activities} 
+          expanded={statsExpanded}
+          onToggle={() => setStatsExpanded(!statsExpanded)}
+        />
+      </Box>
 
       {/* Activities Table */}
       <ActivityTable activities={activities} handleOpen={handleOpen} deleteActivity={deleteActivity} />
