@@ -21,7 +21,7 @@ const App = () => {
   const [isPeeChecked, setIsPeeChecked] = useState(false);
   const [statsExpanded, setStatsExpanded] = useState(false);
 
-  const activityTypes = ["Walk", "Backyard", "Meal"];
+  const activityTypes = ["Walk", "Backyard", "Meal", "Play"];
 
   useEffect(() => {
     fetchActivities();
@@ -175,9 +175,27 @@ const App = () => {
       </Typography>
 
       {/* Activity buttons */}
-      <Stack direction="row" spacing={2} justifyContent="center" sx={{ flexWrap: "wrap", mb: 3 }}>
+      <Stack 
+        direction={{ xs: 'column', sm: 'row' }} 
+        spacing={2} 
+        alignItems="center"
+        sx={{ 
+          mb: 3,
+          width: '100%',
+          maxWidth: { xs: '200px', sm: 'none' },
+          margin: '0 auto 24px auto'
+        }}
+      >
         {activityTypes.map((type) => (
-          <Button key={type} variant="contained" onClick={() => handleOpen(type)}>
+          <Button 
+            key={type} 
+            variant="contained" 
+            onClick={() => handleOpen(type)}
+            sx={{ 
+              width: '100%',
+              minWidth: { xs: '150px', sm: 'auto' }
+            }}
+          >
             {type}
           </Button>
         ))}

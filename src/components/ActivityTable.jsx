@@ -1,14 +1,31 @@
 import { Table, TableHead, TableBody, TableRow, TableCell, Button, Paper, Typography, Box, Collapse, IconButton } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { useState } from 'react';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Icon from '@mdi/react';
+import { mdiEmoticonPoop } from '@mdi/js';
 
 const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
   const [expandedDates, setExpandedDates] = useState(() => {
     const today = new Date().toLocaleDateString();
     return new Set([today]);
   });
+
+  // Track the most recently added activity
+  const [lastAddedId, setLastAddedId] = useState(null);
+
+  // Update lastAddedId when activities change
+  useEffect(() => {
+    if (activities.length > 0) {
+      const mostRecent = activities[0]; // Assuming activities are sorted by date desc
+      setLastAddedId(mostRecent.id);
+      // Clear the highlight after animation
+      setTimeout(() => setLastAddedId(null), 2000);
+    }
+  }, [activities]);
 
   const toggleDate = (date) => {
     const newExpandedDates = new Set(expandedDates);
@@ -32,6 +49,20 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
   };
 
   const activitiesByDate = groupActivitiesByDate(activities);
+
+  const formatNotes = (notes) => {
+    if (!notes) return "—";
+    
+    const parts = notes.split(/(poop|pee)/gi);
+    return parts.map((part, index) => {
+      if (part.toLowerCase() === 'pee') {
+        return <WaterDropIcon key={index} sx={{ color: '#FFD700', fontSize: 24}} />;
+      } else if (part.toLowerCase() === 'poop') {
+        return <Icon key={index} path={mdiEmoticonPoop} color="brown" size='24px' />;
+      }
+      return part;
+    });
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -84,7 +115,19 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
                     });
 
                     return (
-                      <TableRow key={activity.id} hover>
+                      <TableRow 
+                        key={activity.id} 
+                        hover
+                        sx={{
+                          ...(activity.id === lastAddedId && {
+                            animation: 'highlightFade 2s',
+                            '@keyframes highlightFade': {
+                              '0%': { backgroundColor: 'rgba(183, 225, 205, 0.4)' },
+                              '100%': { backgroundColor: 'transparent' }
+                            }
+                          })
+                        }}
+                      >
                         <TableCell 
                           sx={{ cursor: "pointer" }} 
                           onClick={() => handleOpen(activity.name, activity)}
@@ -101,11 +144,11 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
                           sx={{ cursor: "pointer" }} 
                           onClick={() => handleOpen(activity.name, activity)}
                         >
-                          {activity.notes?.replace(/poop/gi, "💩").replace(/pee/gi, "🚽") || "—"}
+                          {formatNotes(activity.notes)}
                         </TableCell>
                         <TableCell>
                           <Button color="error" size="small" onClick={() => deleteActivity(activity.id)}>
-                            🚮
+                            <DeleteIcon />
                           </Button>
                         </TableCell>
                       </TableRow>

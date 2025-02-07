@@ -89,16 +89,20 @@ export const calculateStatsWithTrend = (activities, excludeRecentDays = 0) => {
 
 export const getTrendIcon = (current, historical) => {
   if (current === 0 || historical === 0) return "→";
-  return current > historical ? "↑" : current < historical ? "↓" : "→";
+  if (current > historical) return "up";
+  if (current < historical) return "down";
+  return "same";
 };
 
 export const getWalkTrendIcon = (current, historical) => {
-  if (current === "Not enough data" || historical === "Not enough data") return "→";
+  if (current === "Not enough data" || historical === "Not enough data") return "same";
   const getCurrentMinutes = (timeStr) => {
     const [hours, minutes] = timeStr.split('h ').map(str => parseInt(str));
     return (hours * 60) + parseInt(minutes);
   };
   const currentMinutes = getCurrentMinutes(current);
   const historicalMinutes = getCurrentMinutes(historical);
-  return currentMinutes > historicalMinutes ? "↑" : currentMinutes < historicalMinutes ? "↓" : "→";
+  if (currentMinutes > historicalMinutes) return "up";
+  if (currentMinutes < historicalMinutes) return "down";
+  return "same";
 }; 

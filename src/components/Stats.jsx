@@ -4,12 +4,28 @@ import PetsIcon from '@mui/icons-material/Pets';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import Icon from '@mdi/react';
+import { mdiEmoticonPoop } from '@mdi/js';
 import { calculateStatsWithTrend, getTrendIcon, getWalkTrendIcon } from "../utils/statsCalculator";
 import PropTypes from 'prop-types';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 
 const Stats = ({ activities, expanded, onToggle }) => {
   const currentStats = calculateStatsWithTrend(activities, 0);
   const historicalStats = calculateStatsWithTrend(activities, 2);
+
+  const renderTrendIcon = (trend) => {
+    switch (trend) {
+      case 'up':
+        return <TrendingUpIcon sx={{ color: 'success.main' }} />;
+      case 'down':
+        return <TrendingDownIcon sx={{ color: 'error.main' }} />;
+      default:
+        return <TrendingFlatIcon sx={{ color: 'text.secondary' }} />;
+    }
+  };
 
   return (
     <Stack spacing={2}>
@@ -32,11 +48,11 @@ const Stats = ({ activities, expanded, onToggle }) => {
             spacing={2} 
             alignItems="center"
           >
-            <AccessTimeIcon color="primary" />
+            <PetsIcon color="primary" />
             <Typography variant="body1" sx={{ textAlign: 'left' }}>
               Current: {currentStats.walkTimingResult}
               <br />
-              Historical: {historicalStats.walkTimingResult} {getWalkTrendIcon(currentStats.walkTimingResult, historicalStats.walkTimingResult)}
+              Historical: {historicalStats.walkTimingResult} {renderTrendIcon(getWalkTrendIcon(currentStats.walkTimingResult, historicalStats.walkTimingResult))}
             </Typography>
           </Stack>
 
@@ -45,11 +61,11 @@ const Stats = ({ activities, expanded, onToggle }) => {
             spacing={2} 
             alignItems="center"
           >
-            <PetsIcon color="primary" />
+            <Icon path={mdiEmoticonPoop} color="#1976d2" size={1} />
             <Typography variant="body1" sx={{ textAlign: 'left' }}>
               Current: {currentStats.avgPoops.toFixed(1)} per day
               <br />
-              Historical: {historicalStats.avgPoops.toFixed(1)} per day {getTrendIcon(currentStats.avgPoops, historicalStats.avgPoops)}
+              Historical: {historicalStats.avgPoops.toFixed(1)} per day {renderTrendIcon(getTrendIcon(currentStats.avgPoops, historicalStats.avgPoops))}
             </Typography>
           </Stack>
 
@@ -62,7 +78,7 @@ const Stats = ({ activities, expanded, onToggle }) => {
             <Typography variant="body1" sx={{ textAlign: 'left' }}>
               Current: {currentStats.avgPees.toFixed(1)} per day
               <br />
-              Historical: {historicalStats.avgPees.toFixed(1)} per day {getTrendIcon(currentStats.avgPees, historicalStats.avgPees)}
+              Historical: {historicalStats.avgPees.toFixed(1)} per day {renderTrendIcon(getTrendIcon(currentStats.avgPees, historicalStats.avgPees))}
             </Typography>
           </Stack>
         </Stack>
