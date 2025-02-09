@@ -6,11 +6,12 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Icon from '@mdi/react';
 import { mdiEmoticonPoop } from '@mdi/js';
-import { calculateStatsWithTrend, getTrendIcon, getWalkTrendIcon } from "../utils/statsCalculator";
+import { calculateStatsWithTrend, getTrendIcon, getWalkTrendIcon, getMealTrendIcon } from "../utils/statsCalculator";
 import PropTypes from 'prop-types';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 
 const Stats = ({ activities, expanded, onToggle }) => {
   const currentStats = calculateStatsWithTrend(activities, 0);
@@ -79,6 +80,28 @@ const Stats = ({ activities, expanded, onToggle }) => {
               Current: {currentStats.avgPees.toFixed(1)} per day
               <br />
               Historical: {historicalStats.avgPees.toFixed(1)} per day {renderTrendIcon(getTrendIcon(currentStats.avgPees, historicalStats.avgPees))}
+            </Typography>
+          </Stack>
+
+          <Stack 
+            direction="row" 
+            spacing={2} 
+            alignItems="center"
+          >
+            <RestaurantIcon color="primary" />
+            <Typography variant="body1" sx={{ textAlign: 'left' }}>
+              Morning Meal: {currentStats.morningMealTime}
+            </Typography>
+          </Stack>
+
+          <Stack 
+            direction="row" 
+            spacing={2} 
+            alignItems="center"
+          >
+            <RestaurantIcon color="primary" />
+            <Typography variant="body1" sx={{ textAlign: 'left' }}>
+              Evening Meal: {currentStats.eveningMealTime}
             </Typography>
           </Stack>
         </Stack>

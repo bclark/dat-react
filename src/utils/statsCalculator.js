@@ -48,6 +48,43 @@ export const calculateStatsWithTrend = (activities, excludeRecentDays = 0) => {
     }
   }
 
+  // Meal timing calculations
+  const meals = periodActivities
+    .filter(activity => activity.name === "Meal")
+    .map(meal => {
+      const date = new Date(meal.created_at);
+      const hour = date.getHours();
+      return {
+        ...meal,
+        isMorning: hour >= 4 && hour < 12  // 4 AM to noon for morning
+      };
+    });
+
+  const morningMeals = meals.filter(meal => meal.isMorning);
+  const eveningMeals = meals.filter(meal => !meal.isMorning);
+
+  const calculateAverageTime = (mealArray) => {
+    if (mealArray.length === 0) return "Not enough data";
+    
+    const totalMinutes = mealArray.reduce((sum, meal) => {
+      const date = new Date(meal.created_at);
+      return sum + (date.getHours() * 60) + date.getMinutes();
+    }, 0);
+
+    const avgMinutes = Math.round(totalMinutes / mealArray.length);
+    const hours = Math.floor(avgMinutes / 60);
+    const minutes = avgMinutes % 60;
+    
+    // Convert to 12-hour format with AM/PM
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12;
+    
+    return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
+  };
+
+  const morningMealTime = calculateAverageTime(morningMeals);
+  const eveningMealTime = calculateAverageTime(eveningMeals);
+
   // Poop and pee calculations
   const activityDays = new Map();
   periodActivities.forEach(activity => {
@@ -84,7 +121,13 @@ export const calculateStatsWithTrend = (activities, excludeRecentDays = 0) => {
     avgPees = totalPees / totalDays;
   }
 
-  return { walkTimingResult, avgPoops, avgPees };
+  return { 
+    walkTimingResult, 
+    avgPoops, 
+    avgPees,
+    morningMealTime,
+    eveningMealTime
+  };
 };
 
 export const getTrendIcon = (current, historical) => {
@@ -105,4 +148,22 @@ export const getWalkTrendIcon = (current, historical) => {
   if (currentMinutes > historicalMinutes) return "up";
   if (currentMinutes < historicalMinutes) return "down";
   return "same";
+};
+
+export const getMealTrendIcon = (current, historical) => {
+  if (current === "Not enough data" || historical === "Not enough data") return "same";
+  
+  const getMinutes = (timeStr) => {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return (hours * 60) + minutes;
+  };
+
+  const currentMinutes = getMinutes(current);
+  const historicalMinutes = getMinutes(historical);
+  
+  // For morning meals, earlier is considered "better" (down arrow)
+  // For evening meals, later is considered "better" (up arrow)
+  const difference = currentMinutes - historicalMinutes;
+  if (Math.abs(difference) < 15) return "same"; // If difference is less than 15 minutes, consider it the same
+  return difference > 0 ? "up" : "down";
 }; 
