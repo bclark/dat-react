@@ -72,6 +72,7 @@ const App = () => {
         console.error("Error updating activity:", error.message);
       } else {
         console.log("Activity updated successfully!");
+        setNotes("");
       }
     } else {
       const { error } = await supabase.from("activities").insert([activityData]);
@@ -80,6 +81,7 @@ const App = () => {
         console.error("Error saving activity:", error.message);
       } else {
         console.log("Activity saved successfully!");
+        setNotes("");
       }
     }
 
