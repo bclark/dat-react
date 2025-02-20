@@ -17,6 +17,9 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
   // Track the most recently added activity
   const [lastAddedId, setLastAddedId] = useState(null);
 
+  // Add new state for tracking clicks
+  const [lastClick, setLastClick] = useState({ id: null, time: 0 });
+
   // Update lastAddedId when activities change
   useEffect(() => {
     if (activities.length > 0) {
@@ -62,6 +65,31 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
       }
       return part;
     });
+  };
+
+  const handleRowClick = (activity) => {
+    const now = Date.now();
+    
+    // Check for double click/tap (within 300ms)
+    if (lastClick.id === activity.id && now - lastClick.time < 300) {
+      // Only handle double-tap for Walk activities
+      if (activity.name === "Walk") {
+        // Toggle poop in notes
+        const hasPoopNow = activity.notes?.toLowerCase().includes('poop') || false;
+        const updatedNotes = hasPoopNow 
+          ? activity.notes.replace(/poop/gi, '').trim()
+          : `${activity.notes ? activity.notes + ' poop' : 'poop'}`;
+          
+        // Open modal with updated notes
+        handleOpen(activity.name, { ...activity, notes: updatedNotes });
+      }
+    } else {
+      // Single click behavior
+      handleOpen(activity.name, activity);
+    }
+
+    // Update last click
+    setLastClick({ id: activity.id, time: now });
   };
 
   return (
@@ -127,7 +155,7 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
                             }
                           })
                         }}
-                        onClick={() => handleOpen(activity.name, activity)}
+                        onClick={() => handleRowClick(activity)}
                       >
                         <TableCell>{time}</TableCell>
                         <TableCell>{activity.name}</TableCell>
