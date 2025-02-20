@@ -13,7 +13,8 @@ const ActivityModal = ({
   setIsPoopChecked, 
   isPeeChecked, 
   setIsPeeChecked, 
-  saveActivity 
+  saveActivity,
+  handleDelete  // Add this prop
 }) => {
   return (
     <Modal open={open} onClose={handleClose}>
@@ -50,7 +51,18 @@ const ActivityModal = ({
         <TextField label="Notes" multiline rows={3} fullWidth value={notes} onChange={(e) => setNotes(e.target.value)} sx={{ mb: 2 }} />
         <Stack direction="row" spacing={2} justifyContent="space-between">
           <Button variant="contained" onClick={saveActivity}>Save</Button>
-          <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+          <Stack direction="row" spacing={1}>
+            {editMode && (
+              <Button 
+                variant="outlined" 
+                color="error" 
+                onClick={handleDelete}
+              >
+                Delete
+              </Button>
+            )}
+            <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+          </Stack>
         </Stack>
       </Box>
     </Modal>

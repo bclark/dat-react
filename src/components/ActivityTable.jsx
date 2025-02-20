@@ -104,7 +104,6 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
                     <TableCell sx={{ fontWeight: "bold" }}>Time</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>Activity</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>Notes</TableCell>
-                    <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -119,6 +118,7 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
                         key={activity.id} 
                         hover
                         sx={{
+                          cursor: "pointer",
                           ...(activity.id === lastAddedId && {
                             animation: 'highlightFade 2s',
                             '@keyframes highlightFade': {
@@ -127,30 +127,11 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
                             }
                           })
                         }}
+                        onClick={() => handleOpen(activity.name, activity)}
                       >
-                        <TableCell 
-                          sx={{ cursor: "pointer" }} 
-                          onClick={() => handleOpen(activity.name, activity)}
-                        >
-                          {time}
-                        </TableCell>
-                        <TableCell 
-                          sx={{ cursor: "pointer" }} 
-                          onClick={() => handleOpen(activity.name, activity)}
-                        >
-                          {activity.name}
-                        </TableCell>
-                        <TableCell 
-                          sx={{ cursor: "pointer" }} 
-                          onClick={() => handleOpen(activity.name, activity)}
-                        >
-                          {formatNotes(activity.notes)}
-                        </TableCell>
-                        <TableCell>
-                          <Button color="error" size="small" onClick={() => deleteActivity(activity.id)}>
-                            <DeleteIcon />
-                          </Button>
-                        </TableCell>
+                        <TableCell>{time}</TableCell>
+                        <TableCell>{activity.name}</TableCell>
+                        <TableCell>{formatNotes(activity.notes)}</TableCell>
                       </TableRow>
                     );
                   })}

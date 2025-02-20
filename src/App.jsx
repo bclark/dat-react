@@ -133,6 +133,11 @@ const App = () => {
     handleClose(); // Close the modal after saving
   };
 
+  const handleDelete = async () => {
+    await deleteActivity(activityId);
+    handleClose();
+  };
+
   const handleClose = () => {
     setOpen(false);
   }
@@ -238,6 +243,7 @@ const App = () => {
         isPeeChecked={isPeeChecked}
         setIsPeeChecked={setIsPeeChecked}
         saveActivity={handleSave}
+        handleDelete={handleDelete}
       />
     </Container>
   );
