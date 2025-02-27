@@ -48,6 +48,20 @@ export const calculateStatsWithTrend = (activities, excludeRecentDays = 0) => {
     }
   }
 
+  // Calculate average walks per day
+  const walksByDay = new Map();
+  walks.forEach(walk => {
+    const date = new Date(walk.created_at).toLocaleDateString();
+    if (!walksByDay.has(date)) {
+      walksByDay.set(date, 0);
+    }
+    walksByDay.set(date, walksByDay.get(date) + 1);
+  });
+
+  const avgWalksPerDay = walksByDay.size > 0 
+    ? Array.from(walksByDay.values()).reduce((sum, count) => sum + count, 0) / walksByDay.size
+    : 0;
+
   // Meal timing calculations
   const meals = periodActivities
     .filter(activity => activity.name === "Meal")
@@ -126,7 +140,8 @@ export const calculateStatsWithTrend = (activities, excludeRecentDays = 0) => {
     avgPoops, 
     avgPees,
     morningMealTime,
-    eveningMealTime
+    eveningMealTime,
+    avgWalksPerDay
   };
 };
 

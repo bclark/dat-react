@@ -1,12 +1,11 @@
 import { Stack, Typography, IconButton, Collapse } from "@mui/material";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PetsIcon from '@mui/icons-material/Pets';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Icon from '@mdi/react';
 import { mdiEmoticonPoop } from '@mdi/js';
-import { calculateStatsWithTrend, getTrendIcon, getWalkTrendIcon, getMealTrendIcon } from "../utils/statsCalculator";
+import { calculateStatsWithTrend, getTrendIcon, getWalkTrendIcon } from "../utils/statsCalculator";
 import PropTypes from 'prop-types';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
@@ -44,6 +43,19 @@ const Stats = ({ activities, expanded, onToggle }) => {
       
       <Collapse in={expanded} sx={{ mt: '0 !important' }}>
         <Stack spacing={2}>
+          <Stack 
+            direction="row" 
+            spacing={2} 
+            alignItems="center"
+          >
+            <PetsIcon color="primary" />
+            <Typography variant="body1" sx={{ textAlign: 'left' }}>
+              Current: {currentStats.avgWalksPerDay.toFixed(1)} walks per day
+              <br />
+              Historical: {historicalStats.avgWalksPerDay.toFixed(1)} walks per day {renderTrendIcon(getTrendIcon(currentStats.avgWalksPerDay, historicalStats.avgWalksPerDay))}
+            </Typography>
+          </Stack>
+
           <Stack 
             direction="row" 
             spacing={2} 

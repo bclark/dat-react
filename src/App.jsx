@@ -22,7 +22,7 @@ const App = () => {
   const [statsExpanded, setStatsExpanded] = useState(false);
 
   const activityTypes = ["Walk", "Backyard", "Meal", "Play"];
-  const siteName = "Azuki&apos;s Activities";
+  const siteName = "Azuki's Activities";
 
   useEffect(() => {
     fetchActivities();
