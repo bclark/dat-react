@@ -22,6 +22,7 @@ const App = () => {
   const [statsExpanded, setStatsExpanded] = useState(false);
 
   const activityTypes = ["Walk", "Backyard", "Meal", "Play"];
+  const siteName = "Azuki&apos;s Activities";
 
   useEffect(() => {
     fetchActivities();
@@ -178,7 +179,7 @@ const App = () => {
           userSelect: 'none',
         }}
       >
-        Dog Activities
+        {siteName}
       </Typography>
 
       {/* Activity buttons */}
