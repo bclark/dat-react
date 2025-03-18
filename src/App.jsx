@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import {
   Button, Typography,
-  Container, Stack, Box
+  Container, Stack, Box, ThemeProvider,
+  FormControl, Select, MenuItem,
+  InputLabel
 } from "@mui/material";
+import { modernTheme, geocitiesTheme, hackerTheme, momaTheme } from './utils/themes';
 
 import { supabase } from "./utils/supabase";
 import ActivityTable from "./components/ActivityTable";
@@ -20,9 +23,17 @@ const App = () => {
   const [isPoopChecked, setIsPoopChecked] = useState(false);
   const [isPeeChecked, setIsPeeChecked] = useState(false);
   const [statsExpanded, setStatsExpanded] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState('modern');
 
   const activityTypes = ["Walk", "Backyard", "Meal", "Play"];
   const siteName = "Azuki's Activities";
+
+  const themes = {
+    modern: modernTheme,
+    geocities: geocitiesTheme,
+    hacker: hackerTheme,
+    moma: momaTheme
+  };
 
   useEffect(() => {
     fetchActivities();
@@ -168,85 +179,126 @@ const App = () => {
     document.body.removeChild(link);
   };
 
-  return (
-    <Container maxWidth="md" sx={{ mt: 4, textAlign: "center" }}>
-      <Typography 
-        variant="h4" 
-        gutterBottom
-        onClick={exportToCSV}
-        sx={{ 
-          cursor: 'pointer',
-          userSelect: 'none',
-        }}
-      >
-        {siteName}
-      </Typography>
+  const handleThemeChange = (event) => {
+    setCurrentTheme(event.target.value);
+  };
 
-      {/* Activity buttons */}
-      <Stack 
-        direction="row"
+  return (
+    <ThemeProvider theme={themes[currentTheme]}>
+      <Box 
         sx={{ 
-          mb: 3,
-          flexWrap: 'wrap',
-          gap: 2,
-          justifyContent: 'center',
-          '& > *': {  // This targets all direct children
-            margin: '4px !important'  // Override Stack spacing
-          }
+          minHeight: '100vh',
+          background: currentTheme === 'geocities' ? 'black' : 
+                      currentTheme === 'hacker' ? '#000000' : 'white',
+          backgroundImage: currentTheme === 'geocities' ? 'url("/sparkles.gif")' : 
+                          currentTheme === 'hacker' ? 'url("/matrix.gif")' : 'none',
+          backgroundAttachment: 'fixed',
+          pt: 4
         }}
       >
-        {activityTypes.map((type) => (
-          <Button 
-            key={type} 
-            variant="contained" 
-            onClick={() => handleOpen(type)}
+        <Container maxWidth="md" sx={{ mt: 4, textAlign: "center" }}>
+          <Stack 
+            direction="row" 
+            spacing={2} 
+            alignItems="center" 
+            justifyContent="space-between"
+            sx={{ mb: 3 }}
+          >
+            <Typography 
+              variant="h4" 
+              onClick={exportToCSV}
+              sx={{ 
+                cursor: 'pointer',
+                userSelect: 'none',
+              }}
+            >
+              {siteName}
+            </Typography>
+
+            <FormControl sx={{ minWidth: 120 }}>
+              <InputLabel id="theme-select-label">Theme</InputLabel>
+              <Select
+                labelId="theme-select-label"
+                id="theme-select"
+                value={currentTheme}
+                label="Theme"
+                onChange={handleThemeChange}
+              >
+                <MenuItem value="modern">Modern</MenuItem>
+                <MenuItem value="geocities">GeoCities</MenuItem>
+                <MenuItem value="hacker">Hacker</MenuItem>
+                <MenuItem value="moma">MoMA</MenuItem>
+              </Select>
+            </FormControl>
+          </Stack>
+
+          {/* Activity buttons */}
+          <Stack 
+            direction="row"
             sx={{ 
-              width: '140px',
-              height: '40px'  // Fixed height for consistency
+              mb: 3,
+              flexWrap: 'wrap',
+              gap: 2,
+              justifyContent: 'center',
+              '& > *': {  // This targets all direct children
+                margin: '4px !important'  // Override Stack spacing
+              }
             }}
           >
-            {type}
-          </Button>
-        ))}
-      </Stack>
+            {activityTypes.map((type) => (
+              <Button 
+                key={type} 
+                variant="contained" 
+                onClick={() => handleOpen(type)}
+                sx={{ 
+                  width: '140px',
+                  height: '40px'  // Fixed height for consistency
+                }}
+              >
+                {type}
+              </Button>
+            ))}
+          </Stack>
 
-      {/* Stats Section */}
-      <Box sx={{ 
-        mb: 3, 
-        p: 2, 
-        bgcolor: 'background.paper', 
-        borderRadius: 1,
-        boxShadow: 1,
-        border: '1px solid rgba(0, 0, 0, 0.12)'
-      }}>
-        <Stats 
-          activities={activities} 
-          expanded={statsExpanded}
-          onToggle={() => setStatsExpanded(!statsExpanded)}
-        />
+          {/* Stats Section */}
+          <Box sx={{ 
+            mb: 3, 
+            p: 2, 
+            bgcolor: 'background.paper', 
+            borderRadius: 1,
+            boxShadow: 1,
+            border: '1px solid rgba(0, 0, 0, 0.12)'
+          }}>
+            <Stats 
+              activities={activities} 
+              expanded={statsExpanded}
+              onToggle={() => setStatsExpanded(!statsExpanded)}
+            />
+          </Box>
+
+          {/* Activities Table */}
+          <ActivityTable activities={activities} handleOpen={handleOpen} deleteActivity={deleteActivity} />
+
+          {/* Modal for editing activity */}
+          <ActivityModal
+            open={open}
+            handleClose={handleClose}
+            editMode={editMode}
+            selectedActivity={selectedActivity}
+            createdAt={createdAt}
+            setCreatedAt={setCreatedAt}
+            notes={notes}
+            setNotes={setNotes}
+            isPoopChecked={isPoopChecked}
+            setIsPoopChecked={setIsPoopChecked}
+            isPeeChecked={isPeeChecked}
+            setIsPeeChecked={setIsPeeChecked}
+            saveActivity={handleSave}
+            handleDelete={handleDelete}
+          />
+        </Container>
       </Box>
-
-      {/* Activities Table */}
-      <ActivityTable activities={activities} handleOpen={handleOpen} deleteActivity={deleteActivity} />
-
-      {/* Modal for editing activity */}
-      <ActivityModal
-        open={open}
-        handleClose={handleClose}
-        editMode={editMode}
-        selectedActivity={selectedActivity}
-        createdAt={createdAt}
-        setCreatedAt={setCreatedAt}
-        notes={notes}
-        setNotes={setNotes}
-        isPoopChecked={isPoopChecked}
-        setIsPoopChecked={setIsPoopChecked}
-        isPeeChecked={isPeeChecked}
-        setIsPeeChecked={setIsPeeChecked}
-        saveActivity={handleSave}
-        handleDelete={handleDelete}
-      />
-    </Container>
+    </ThemeProvider>
   );
 };
 

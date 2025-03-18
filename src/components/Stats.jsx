@@ -28,7 +28,18 @@ const Stats = ({ activities, expanded, onToggle }) => {
   };
 
   return (
-    <Stack spacing={2}>
+    <Stack 
+      spacing={2} 
+      sx={{ 
+        '& .MuiTypography-body1': {
+          color: '#00FF00', // Neon green text
+          textShadow: '1px 1px #000000'
+        },
+        '& .MuiSvgIcon-root': {
+          filter: 'drop-shadow(0 0 2px #00FFFF)'
+        }
+      }}
+    >
       <Stack 
         direction="row" 
         justifyContent="space-between" 
