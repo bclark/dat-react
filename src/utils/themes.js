@@ -383,4 +383,129 @@ export const cartoonTheme = createTheme({
       color: '#2C3E50',
     }
   }
+});
+
+export const dachshundTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#8B4513', // Saddle brown
+    },
+    background: {
+      default: '#FFF5E6', // Warm cream
+      paper: '#FFFFFF',
+    },
+    text: {
+      primary: '#5C3317', // Darker brown
+      secondary: '#8B4513', // Saddle brown
+    }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          background: 'linear-gradient(45deg, #8B4513 30%, #A0522D 90%)',
+          color: '#FFF5E6',
+          borderRadius: '30px 30px 15px 15px', // Elongated like a dachshund
+          padding: '8px 24px',
+          fontFamily: '"Quicksand", sans-serif',
+          fontWeight: 600,
+          border: '2px solid #5C3317',
+          '&:hover': {
+            background: 'linear-gradient(45deg, #A0522D 30%, #8B4513 90%)',
+            boxShadow: '0 3px 5px 2px rgba(139, 69, 19, .3)',
+          }
+        }
+      }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '15px',
+          border: '2px solid #DEB887', // Burlywood
+          boxShadow: '0 4px 8px rgba(139, 69, 19, 0.2)',
+          position: 'relative',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            bottom: '-10px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '40px',
+            height: '5px',
+            backgroundColor: '#8B4513',
+            borderRadius: '10px',
+            opacity: 0.5
+          }
+        }
+      }
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#DEB887 !important', // Burlywood
+          '& .MuiTableCell-root': {
+            color: '#5C3317',
+            fontFamily: '"Quicksand", sans-serif',
+            fontWeight: 700
+          }
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderColor: '#DEB887',
+          color: '#5C3317',
+          fontFamily: '"Quicksand", sans-serif'
+        }
+      }
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Quicksand", sans-serif',
+          '&:before': {
+            borderColor: '#8B4513',
+          }
+        }
+      }
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Quicksand", sans-serif',
+          color: '#8B4513',
+          '&.Mui-focused': {
+            color: '#8B4513',
+          }
+        }
+      }
+    }
+  },
+  typography: {
+    fontFamily: '"Quicksand", sans-serif',
+    h4: {
+      color: '#5C3317',
+      fontWeight: 700,
+      letterSpacing: '1px',
+      position: 'relative',
+      '&::after': {
+        content: '""',
+        position: 'absolute',
+        bottom: '-8px',
+        left: '0',
+        width: '100%',
+        height: '3px',
+        background: 'linear-gradient(90deg, #DEB887, transparent)',
+      }
+    },
+    h6: {
+      color: '#8B4513',
+      fontWeight: 600
+    },
+    body1: {
+      color: '#5C3317',
+      fontSize: '1rem',
+    }
+  }
 }); 
