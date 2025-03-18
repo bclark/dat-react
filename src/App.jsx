@@ -5,7 +5,7 @@ import {
   FormControl, Select, MenuItem,
   InputLabel
 } from "@mui/material";
-import { modernTheme, geocitiesTheme, hackerTheme, momaTheme, cartoonTheme, dachshundTheme } from './utils/themes';
+import { modernTheme, geocitiesTheme, hackerTheme, momaTheme, cartoonTheme, dachshundTheme, samuraiTheme } from './utils/themes';
 
 import { supabase } from "./utils/supabase";
 import ActivityTable from "./components/ActivityTable";
@@ -34,7 +34,8 @@ const App = () => {
     hacker: hackerTheme,
     moma: momaTheme,
     cartoon: cartoonTheme,
-    dachshund: dachshundTheme
+    dachshund: dachshundTheme,
+    samurai: samuraiTheme
   };
 
   useEffect(() => {
@@ -232,6 +233,7 @@ const App = () => {
                 <MenuItem value="moma">MoMA</MenuItem>
                 <MenuItem value="cartoon">Cartoon</MenuItem>
                 <MenuItem value="dachshund">Dachshund</MenuItem>
+                <MenuItem value="samurai">Samurai</MenuItem>
               </Select>
             </FormControl>
           </Stack>

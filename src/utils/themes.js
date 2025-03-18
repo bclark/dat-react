@@ -508,4 +508,151 @@ export const dachshundTheme = createTheme({
       fontSize: '1rem',
     }
   }
+});
+
+export const samuraiTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#BC002D', // Traditional Japanese red
+    },
+    background: {
+      default: '#F7F3E9', // Rice paper color
+      paper: '#FFFFFF',
+    },
+    text: {
+      primary: '#2D2D2D', // Deep charcoal
+      secondary: '#BC002D', // Traditional red
+    }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          background: 'linear-gradient(to bottom, #BC002D, #8C0020)',
+          color: '#FFFFFF',
+          borderRadius: '2px',
+          padding: '8px 24px',
+          fontFamily: '"Noto Sans JP", sans-serif',
+          fontWeight: 500,
+          border: '1px solid #8C0020',
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'linear-gradient(45deg, transparent 48%, #BC002D 49%, #BC002D 51%, transparent 52%)',
+            opacity: 0,
+            transition: 'opacity 0.3s',
+          },
+          '&:hover': {
+            background: 'linear-gradient(to bottom, #D4003A, #BC002D)',
+            '&::before': {
+              opacity: 0.2,
+            }
+          }
+        }
+      }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '2px',
+          border: '1px solid #E5E1D8',
+          boxShadow: '4px 4px 0 rgba(0, 0, 0, 0.1)',
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 8,
+            left: 8,
+            right: -8,
+            bottom: -8,
+            background: 'repeating-linear-gradient(45deg, #E5E1D8 0, #E5E1D8 1px, transparent 1px, transparent 4px)',
+            zIndex: -1,
+          }
+        }
+      }
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#2D2D2D !important',
+          '& .MuiTableCell-root': {
+            color: '#FFFFFF',
+            fontFamily: '"Noto Sans JP", sans-serif',
+            fontWeight: 500,
+            borderBottom: '2px solid #BC002D'
+          }
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderColor: '#E5E1D8',
+          fontFamily: '"Noto Sans JP", sans-serif',
+          '&:not(:last-child)': {
+            borderRight: '1px solid #E5E1D8'
+          }
+        }
+      }
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Noto Sans JP", sans-serif',
+          '&:before': {
+            borderColor: '#BC002D',
+          }
+        }
+      }
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Noto Sans JP", sans-serif',
+          color: '#2D2D2D',
+          '&.Mui-focused': {
+            color: '#BC002D',
+          }
+        }
+      }
+    }
+  },
+  typography: {
+    fontFamily: '"Noto Sans JP", sans-serif',
+    h4: {
+      color: '#2D2D2D',
+      fontWeight: 700,
+      letterSpacing: '2px',
+      position: 'relative',
+      paddingBottom: '16px',
+      '&::after': {
+        content: '""',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        height: '2px',
+        background: `linear-gradient(90deg, 
+          #BC002D 0%, #BC002D 40%, 
+          transparent 40%, transparent 60%,
+          #BC002D 60%, #BC002D 100%
+        )`
+      }
+    },
+    h6: {
+      color: '#2D2D2D',
+      fontWeight: 600,
+      letterSpacing: '1px'
+    },
+    body1: {
+      color: '#2D2D2D',
+      fontSize: '1rem',
+      lineHeight: 1.8
+    }
+  }
 }); 
