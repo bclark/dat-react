@@ -283,4 +283,104 @@ export const momaTheme = createTheme({
       letterSpacing: '0.5px',
     }
   }
+});
+
+export const cartoonTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#FF4081', // Bright pink
+    },
+    background: {
+      default: '#FFF9C4', // Light yellow background
+      paper: '#FFFFFF',
+    },
+    text: {
+      primary: '#2C3E50', // Dark blue-grey
+      secondary: '#E91E63', // Pink
+    }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          backgroundColor: '#FF4081',
+          color: '#FFFFFF',
+          borderRadius: '25px',
+          border: '3px solid #FFF',
+          fontFamily: 'Fredoka One, cursive',
+          fontSize: '1.1rem',
+          boxShadow: '0 4px 0 #E91E63',
+          transform: 'translateY(-2px)',
+          transition: 'all 0.2s',
+          '&:hover': {
+            backgroundColor: '#E91E63',
+            transform: 'translateY(0)',
+            boxShadow: '0 2px 0 #C2185B',
+          }
+        }
+      }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '20px',
+          border: '3px solid #FF4081',
+          boxShadow: '8px 8px 0 rgba(233, 30, 99, 0.2)',
+        }
+      }
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#FF4081 !important',
+          '& .MuiTableCell-root': {
+            color: '#FFFFFF',
+            fontFamily: 'Fredoka One, cursive',
+            fontSize: '1.1rem'
+          }
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderColor: '#FFB4D9',
+          fontSize: '1rem',
+          fontFamily: 'Nunito, sans-serif'
+        }
+      }
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius: '15px',
+          fontFamily: 'Nunito, sans-serif'
+        }
+      }
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontFamily: 'Nunito, sans-serif',
+          fontSize: '1rem'
+        }
+      }
+    }
+  },
+  typography: {
+    fontFamily: 'Nunito, sans-serif',
+    h4: {
+      fontFamily: 'Fredoka One, cursive',
+      color: '#FF4081',
+      textShadow: '2px 2px 0 #FFB4D9',
+    },
+    h6: {
+      fontFamily: 'Fredoka One, cursive',
+      color: '#FF4081',
+    },
+    body1: {
+      fontSize: '1rem',
+      color: '#2C3E50',
+    }
+  }
 }); 
