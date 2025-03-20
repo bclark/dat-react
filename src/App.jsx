@@ -23,7 +23,10 @@ const App = () => {
   const [isPoopChecked, setIsPoopChecked] = useState(false);
   const [isPeeChecked, setIsPeeChecked] = useState(false);
   const [statsExpanded, setStatsExpanded] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState('modern');
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('selectedTheme');
+    return savedTheme || 'modern';
+  });
 
   const activityTypes = ["Walk", "Backyard", "Meal", "Play"];
   const siteName = "Azuki's Activities";
@@ -183,7 +186,9 @@ const App = () => {
   };
 
   const handleThemeChange = (event) => {
-    setCurrentTheme(event.target.value);
+    const newTheme = event.target.value;
+    setCurrentTheme(newTheme);
+    localStorage.setItem('selectedTheme', newTheme);
   };
 
   return (
