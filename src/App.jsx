@@ -5,7 +5,7 @@ import {
   FormControl, Select, MenuItem,
   InputLabel
 } from "@mui/material";
-import { modernTheme, geocitiesTheme, hackerTheme, momaTheme, cartoonTheme, dachshundTheme, samuraiTheme } from './utils/themes';
+import { modernTheme, geocitiesTheme, hackerTheme, momaTheme, cartoonTheme, dachshundTheme, samuraiTheme, birthdayTheme } from './utils/themes';
 
 import { supabase } from "./utils/supabase";
 import ActivityTable from "./components/ActivityTable";
@@ -23,13 +23,21 @@ const App = () => {
   const [isPoopChecked, setIsPoopChecked] = useState(false);
   const [isPeeChecked, setIsPeeChecked] = useState(false);
   const [statsExpanded, setStatsExpanded] = useState(false);
+  const [siteName, setSiteName] = useState("Azuki's Activities");
   const [currentTheme, setCurrentTheme] = useState(() => {
     const savedTheme = localStorage.getItem('selectedTheme');
+    const today = new Date();
+    const isBirthday = today.getMonth() === 4 && today.getDate() === 3; // May 3rd (month is 0-based)
+    
+    if (isBirthday) {
+      setSiteName("🎂 Azuki's Birthday 🎉");
+      return 'birthday';
+    }
     return savedTheme || 'modern';
   });
 
   const activityTypes = ["Walk", "Backyard", "Meal", "Play"];
-  const siteName = "Azuki's Activities";
+  
 
   const themes = {
     modern: modernTheme,
@@ -38,7 +46,8 @@ const App = () => {
     moma: momaTheme,
     cartoon: cartoonTheme,
     dachshund: dachshundTheme,
-    samurai: samuraiTheme
+    samurai: samuraiTheme,
+    birthday: birthdayTheme
   };
 
   useEffect(() => {
@@ -239,6 +248,7 @@ const App = () => {
                 <MenuItem value="cartoon">Cartoon</MenuItem>
                 <MenuItem value="dachshund">Dachshund</MenuItem>
                 <MenuItem value="samurai">Samurai</MenuItem>
+                <MenuItem value="birthday">Birthday</MenuItem>
               </Select>
             </FormControl>
           </Stack>
