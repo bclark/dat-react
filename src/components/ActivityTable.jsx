@@ -1,14 +1,13 @@
-import { Table, TableHead, TableBody, TableRow, TableCell, Button, Paper, Typography, Box, Collapse, IconButton } from "@mui/material";
+import { Table, TableHead, TableBody, TableRow, TableCell, Paper, Typography, Box, Collapse, IconButton } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Icon from '@mdi/react';
-import { mdiEmoticonPoop } from '@mdi/js';
+import { mdiEmoticonPoop } from '@mdi/js';  
 
-const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
+const ActivityTable = ({ activities, handleOpen }) => {
   const [expandedDates, setExpandedDates] = useState(() => {
     const today = new Date().toLocaleDateString();
     return new Set([today]);
@@ -92,6 +91,17 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
     setLastClick({ id: activity.id, time: now });
   };
 
+  const formatDateHeader = (date) => {
+    const [month, day] = date.split('/');
+    const isBirthday = month === '5' && day === '3';
+    return (
+      <>
+        {date}
+        {isBirthday && ' 🎂🎉'}
+      </>
+    );
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
       {Object.entries(activitiesByDate).map(([date, activitiesForDate]) => (
@@ -116,7 +126,7 @@ const ActivityTable = ({ activities, handleOpen, deleteActivity }) => {
             onClick={() => toggleDate(date)}
           >
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              {date}
+              {formatDateHeader(date)}
             </Typography>
             <IconButton size="small">
               {expandedDates.has(date) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
