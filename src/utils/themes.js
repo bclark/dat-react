@@ -660,31 +660,30 @@ export const samuraiTheme = createTheme({
 export const birthdayTheme = createTheme({
   palette: {
     primary: {
-      main: '#FF69B4', // Hot pink
+      main: '#4169E1', // Royal blue
     },
     background: {
-      default: '#FFF0F5', // Lavender blush
+      default: '#E6F0FF', // Light blue
       paper: '#FFFFFF',
     },
     text: {
-      primary: '#FF1493', // Deep pink
-      secondary: '#FF69B4', // Hot pink
+      primary: '#1E3A8A', // Dark blue
+      secondary: '#4169E1', // Royal blue
     }
   },
   components: {
     MuiButton: {
       styleOverrides: {
         contained: {
-          background: 'linear-gradient(45deg, #FF69B4 30%, #FFB6C1 90%)',
+          background: 'linear-gradient(45deg, #4169E1 30%, #87CEEB 90%)',
           color: '#FFFFFF',
           borderRadius: '20px',
           padding: '8px 24px',
-          fontFamily: '"Comic Sans MS", cursive',
           fontWeight: 600,
-          border: '2px solid #FF1493',
+          border: '2px solid #1E3A8A',
           '&:hover': {
-            background: 'linear-gradient(45deg, #FFB6C1 30%, #FF69B4 90%)',
-            boxShadow: '0 3px 5px 2px rgba(255, 105, 180, .3)',
+            background: 'linear-gradient(45deg, #87CEEB 30%, #4169E1 90%)',
+            boxShadow: '0 3px 5px 2px rgba(65, 105, 225, .3)',
           }
         }
       }
@@ -693,8 +692,8 @@ export const birthdayTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: '20px',
-          border: '2px solid #FFB6C1',
-          boxShadow: '0 4px 8px rgba(255, 105, 180, 0.2)',
+          border: '2px solid #87CEEB',
+          boxShadow: '0 4px 8px rgba(65, 105, 225, 0.2)',
           position: 'relative',
           '&::after': {
             content: '""',
@@ -704,7 +703,7 @@ export const birthdayTheme = createTheme({
             transform: 'translateX(-50%)',
             width: '40px',
             height: '5px',
-            backgroundColor: '#FF69B4',
+            backgroundColor: '#4169E1',
             borderRadius: '10px',
             opacity: 0.5
           }
@@ -714,10 +713,9 @@ export const birthdayTheme = createTheme({
     MuiTableHead: {
       styleOverrides: {
         root: {
-          backgroundColor: '#FFB6C1 !important',
+          backgroundColor: '#87CEEB !important',
           '& .MuiTableCell-root': {
-            color: '#FF1493',
-            fontFamily: '"Comic Sans MS", cursive',
+            color: '#1E3A8A',
             fontWeight: 700
           }
         }
@@ -726,17 +724,15 @@ export const birthdayTheme = createTheme({
     MuiTableCell: {
       styleOverrides: {
         root: {
-          borderColor: '#FFB6C1',
-          color: '#FF1493',
-          fontFamily: '"Comic Sans MS", cursive'
+          borderColor: '#87CEEB',
+          color: '#1E3A8A'
         }
       }
     }
   },
   typography: {
-    fontFamily: '"Comic Sans MS", cursive',
     h4: {
-      color: '#FF1493',
+      color: '#1E3A8A',
       fontWeight: 700,
       letterSpacing: '1px',
       position: 'relative',
@@ -747,15 +743,15 @@ export const birthdayTheme = createTheme({
         left: '0',
         width: '100%',
         height: '3px',
-        background: 'linear-gradient(90deg, #FFB6C1, transparent)',
+        background: 'linear-gradient(90deg, #87CEEB, transparent)',
       }
     },
     h6: {
-      color: '#FF69B4',
+      color: '#4169E1',
       fontWeight: 600
     },
     body1: {
-      color: '#FF1493',
+      color: '#1E3A8A',
       fontSize: '1rem',
     }
   }
