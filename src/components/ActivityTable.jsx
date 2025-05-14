@@ -1,4 +1,4 @@
-import { Table, TableHead, TableBody, TableRow, TableCell, Paper, Typography, Box, Collapse, IconButton } from "@mui/material";
+import { Table, TableHead, TableBody, TableRow, TableCell, Paper, Typography, Box, Collapse, IconButton, Link } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import Icon from '@mdi/react';
 import { mdiEmoticonPoop } from '@mdi/js';  
 
-const ActivityTable = ({ activities, handleOpen }) => {
+const ActivityTable = ({ activities, handleOpen, showAll = false }) => {
   const [expandedDates, setExpandedDates] = useState(() => {
     const today = new Date().toLocaleDateString();
     return new Set([today]);
@@ -40,7 +40,9 @@ const ActivityTable = ({ activities, handleOpen }) => {
   };
 
   const groupActivitiesByDate = (activities) => {
-    return activities.reduce((groups, activity) => {
+    // Only slice if we're not showing all activities
+    const activitiesToShow = showAll ? activities : activities.slice(0, 30);
+    return activitiesToShow.reduce((groups, activity) => {
       const date = new Date(activity.created_at).toLocaleDateString();
       if (!groups[date]) {
         groups[date] = [];
@@ -51,6 +53,7 @@ const ActivityTable = ({ activities, handleOpen }) => {
   };
 
   const activitiesByDate = groupActivitiesByDate(activities);
+  const hasMoreActivities = !showAll && activities.length > 30;
 
   const formatNotes = (notes) => {
     if (!notes) return "—";
@@ -179,6 +182,23 @@ const ActivityTable = ({ activities, handleOpen }) => {
           </Collapse>
         </Paper>
       ))}
+      
+      {hasMoreActivities && (
+        <Box sx={{ textAlign: 'center', mt: 2, mb: 4 }}>
+          <Link
+            href="/all-activities"
+            sx={{
+              color: 'primary.main',
+              textDecoration: 'none',
+              '&:hover': {
+                textDecoration: 'underline'
+              }
+            }}
+          >
+            View All {activities.length} Activities →
+          </Link>
+        </Box>
+      )}
     </Box>
   );
 };
