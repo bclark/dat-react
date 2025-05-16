@@ -7,10 +7,13 @@ import PropTypes from 'prop-types';
 import Icon from '@mdi/react';
 import { mdiEmoticonPoop } from '@mdi/js';  
 
-const ActivityTable = ({ activities, handleOpen, showAll = false }) => {
+const ActivityTable = ({ activities, handleOpen }) => {
   const [expandedDates, setExpandedDates] = useState(() => {
-    const today = new Date().toLocaleDateString();
-    return new Set([today]);
+    // Get all unique dates from activities
+    const dates = new Set(activities.map(activity => 
+      new Date(activity.created_at).toLocaleDateString()
+    ));
+    return dates;
   });
 
   // Track the most recently added activity
@@ -40,9 +43,8 @@ const ActivityTable = ({ activities, handleOpen, showAll = false }) => {
   };
 
   const groupActivitiesByDate = (activities) => {
-    // Only slice if we're not showing all activities
-    const activitiesToShow = showAll ? activities : activities.slice(0, 30);
-    return activitiesToShow.reduce((groups, activity) => {
+    console.log('Activities received in groupActivitiesByDate:', activities.length);
+    const grouped = activities.reduce((groups, activity) => {
       const date = new Date(activity.created_at).toLocaleDateString();
       if (!groups[date]) {
         groups[date] = [];
@@ -50,10 +52,13 @@ const ActivityTable = ({ activities, handleOpen, showAll = false }) => {
       groups[date].push(activity);
       return groups;
     }, {});
+    console.log('Grouped activities by date:', Object.keys(grouped).length, 'dates');
+    return grouped;
   };
 
   const activitiesByDate = groupActivitiesByDate(activities);
-  const hasMoreActivities = !showAll && activities.length > 30;
+  console.log('Final activitiesByDate:', Object.entries(activitiesByDate).map(([date, acts]) => `${date}: ${acts.length}`));
+  const hasMoreActivities = activities.length > 30;
 
   const formatNotes = (notes) => {
     if (!notes) return "—";
@@ -186,7 +191,7 @@ const ActivityTable = ({ activities, handleOpen, showAll = false }) => {
       {hasMoreActivities && (
         <Box sx={{ textAlign: 'center', mt: 2, mb: 4 }}>
           <Link
-            href="/all-activities"
+            href="/?count=0"
             sx={{
               color: 'primary.main',
               textDecoration: 'none',

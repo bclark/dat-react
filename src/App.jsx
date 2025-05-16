@@ -24,6 +24,7 @@ const App = () => {
   const [isPeeChecked, setIsPeeChecked] = useState(false);
   const [statsExpanded, setStatsExpanded] = useState(false);
   const [siteName, setSiteName] = useState("Azuki's Activities");
+  const [activityCount, setActivityCount] = useState(30);
   const [currentTheme, setCurrentTheme] = useState(() => {
     const savedTheme = localStorage.getItem('selectedTheme');
     const today = new Date();
@@ -51,14 +52,30 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchActivities();
+    // Get count from URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const count = parseInt(params.get('count') || '30', 10);
+    console.log('URL count parameter:', count);
+    setActivityCount(count);
+    fetchActivities(count);
   }, []);
 
-  const fetchActivities = async () => {
-    const { data, error } = await supabase
+  const fetchActivities = async (limit = activityCount) => {
+    console.log('Fetching activities with limit:', limit);
+    let query = supabase
       .from("activities")
       .select("*")
       .order("created_at", { ascending: false });
+    
+    if (limit > 0) {
+      // Calculate date 30 days ago
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - limit);
+      query = query.gte('created_at', thirtyDaysAgo.toISOString());
+    }
+
+    const { data, error } = await query;
+    console.log('Fetched activities count:', data?.length);
 
     if (error) {
       console.error("Error fetching activities:", error.message);
@@ -112,7 +129,7 @@ const App = () => {
       }
     }
 
-    
+    fetchActivities(activityCount);
   };
 
   const deleteActivity = async (id) => {
@@ -125,7 +142,7 @@ const App = () => {
       console.error("Error deleting activity:", error.message);
     } else {
       console.log("Activity deleted successfully!");
-      fetchActivities(); // Refresh the list after deletion
+      fetchActivities(activityCount); // Refresh the list after deletion
     }
   };
 
