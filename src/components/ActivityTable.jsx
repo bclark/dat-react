@@ -9,11 +9,9 @@ import { mdiEmoticonPoop } from '@mdi/js';
 
 const ActivityTable = ({ activities, handleOpen }) => {
   const [expandedDates, setExpandedDates] = useState(() => {
-    // Get all unique dates from activities
-    const dates = new Set(activities.map(activity => 
-      new Date(activity.created_at).toLocaleDateString()
-    ));
-    return dates;
+    if (activities.length === 0) return new Set();
+    const firstDate = new Date(activities[0].created_at).toLocaleDateString();
+    return new Set([firstDate]);
   });
 
   // Track the most recently added activity
@@ -30,6 +28,12 @@ const ActivityTable = ({ activities, handleOpen }) => {
       // Clear the highlight after animation
       setTimeout(() => setLastAddedId(null), 2000);
     }
+  }, [activities]);
+
+  useEffect(() => {
+    if (activities.length === 0) return;
+    const firstDate = new Date(activities[0].created_at).toLocaleDateString();
+    setExpandedDates(new Set([firstDate]));
   }, [activities]);
 
   const toggleDate = (date) => {
