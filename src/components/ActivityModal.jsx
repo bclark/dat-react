@@ -42,7 +42,7 @@ const ActivityModal = ({
           onChange={(e) => setCreatedAt(e.target.value)}
           sx={{ mb: 2 }}
         />
-        {(selectedActivity === "Walk" || selectedActivity === "Backyard") && (
+        {(selectedActivity === "Walk" || selectedActivity === "Yard") && (
           <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
             <FormControlLabel control={<Checkbox checked={isPoopChecked} onChange={(e) => setIsPoopChecked(e.target.checked)} />} label="Poop" />
             <FormControlLabel control={<Checkbox checked={isPeeChecked} onChange={(e) => setIsPeeChecked(e.target.checked)} />} label="Pee" />

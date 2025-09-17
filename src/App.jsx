@@ -37,7 +37,7 @@ const App = () => {
     return savedTheme || 'modern';
   });
 
-  const activityTypes = ["Walk", "Backyard", "Meal", "Play"];
+  const activityTypes = ["Walk", "Yard", "Meal"];
   
 
   const themes = {
@@ -88,7 +88,7 @@ const App = () => {
     let updatedNotes = notes.trim();
 
     // Prepend Poop or Pee if applicable
-    if (selectedActivity === "Walk" || selectedActivity === "Backyard") {
+    if (selectedActivity === "Walk" || selectedActivity === "Yard") {
       if (isPoopChecked) {
         updatedNotes = `Poop ${updatedNotes}`;
       }
