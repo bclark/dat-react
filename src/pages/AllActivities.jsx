@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import ActivityTable from '../components/ActivityTable';
 import { useActivities } from '../hooks/useActivities'; // You'll need to create this hook
 

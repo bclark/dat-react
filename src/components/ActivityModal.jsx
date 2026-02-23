@@ -1,4 +1,5 @@
 import { Modal, Box, TextField, Button, Checkbox, FormControlLabel, Typography, Stack } from "@mui/material";
+import PropTypes from 'prop-types';
 
 const ActivityModal = ({ 
   open, 
@@ -67,6 +68,23 @@ const ActivityModal = ({
       </Box>
     </Modal>
   );
+};
+
+ActivityModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  editMode: PropTypes.bool.isRequired,
+  selectedActivity: PropTypes.string.isRequired,
+  createdAt: PropTypes.string.isRequired,
+  setCreatedAt: PropTypes.func.isRequired,
+  notes: PropTypes.string.isRequired,
+  setNotes: PropTypes.func.isRequired,
+  isPoopChecked: PropTypes.bool.isRequired,
+  setIsPoopChecked: PropTypes.func.isRequired,
+  isPeeChecked: PropTypes.bool.isRequired,
+  setIsPeeChecked: PropTypes.func.isRequired,
+  saveActivity: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
 };
 
 export default ActivityModal;

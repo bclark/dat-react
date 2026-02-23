@@ -58,6 +58,7 @@ const App = () => {
     console.log('URL count parameter:', count);
     setActivityCount(count);
     fetchActivities(count);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchActivities = async (limit = activityCount) => {
